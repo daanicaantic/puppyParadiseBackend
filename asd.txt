@@ -1,0 +1,17 @@
+1. U el:
+ folder consts
+
+u folderu const folder Roles
+
+u folderu roles clasa Roles Const ili kako god
+
+ definisati role
+
+2. Odvojiti klasu Role od klase Usera
+
+ id 
+ roleName
+
+3. Sidovati role
+4. Odvojiti metodu za sidovanje u posevnom fajlu kako bi db kontekst bio citljiviji
+5. Ekstenzn metoda za service
