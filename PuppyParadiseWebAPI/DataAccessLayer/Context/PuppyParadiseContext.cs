@@ -35,6 +35,13 @@ namespace DataAccessLayer.Context
             base.OnModelCreating(modelBuilder);
 
             RoleSeeder.SeedRoles(modelBuilder);
+
+            ServiceTypeSeeder.SeedServiceType(modelBuilder);
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Role)
+                .WithMany()  // Now Role has Users collection
+                .HasForeignKey(u => u.RoleId);
         }
     }
 }
