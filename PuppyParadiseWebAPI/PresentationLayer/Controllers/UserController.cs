@@ -1,5 +1,5 @@
-﻿using BussinesLogicLayer.Services.Implementations;
-using BussinesLogicLayer.Services.Interfaces;
+﻿using BusinessLogicLayer.Services.Implementations;
+using BusinessLogicLayer.Services.Interfaces;
 using DataAccessLayer.Context;
 using DataAccessLayer.Repositories.Interfaces;
 using DomainLayer.Models;
