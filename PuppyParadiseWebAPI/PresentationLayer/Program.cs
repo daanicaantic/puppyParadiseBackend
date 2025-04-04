@@ -1,3 +1,4 @@
+using BusinessLogicLayer.Extensions;
 using BusinessLogicLayer.Services.Implementations;
 using BusinessLogicLayer.Services.Interfaces;
 using DataAccessLayer.Context;
@@ -13,9 +14,7 @@ builder.Services.AddDbContext<PuppyParadiseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container. DI
-builder.Services.AddScoped<IUserService, UserService>(); 
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddApplicationServices();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
