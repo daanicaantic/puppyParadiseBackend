@@ -1,4 +1,5 @@
-﻿using DomainLayer.Models;
+﻿using DomainLayer.DTOs;
+using DomainLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,12 @@ namespace DataAccessLayer.Repositories.Interfaces
 {
     public interface IUserRepository : IRepository<User>
     {
+        Task AddUser(UserDTO userDTO);
+
+        Task<UserDTO> GetUser(int id);
+
+        Task<User> GetByEmail(string email);
+
+        Task<User> GetByPhoneNumber(string phoneNumber);
     }
 }

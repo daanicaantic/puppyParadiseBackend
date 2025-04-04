@@ -20,8 +20,8 @@ namespace DomainLayer.Models
 
         public int RoleId { get; set; }
 
-        public Role Role { get; set; }
+        public Role? Role { get; set; }
 
-        public List<Dog> Dogs { get; set; }
+        public List<Dog>? Dogs { get; set; }
     }
 }
