@@ -10,14 +10,17 @@ namespace DataAccessLayer.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-
         private readonly PuppyParadiseContext _puppyParadiseContext;
+
         public IUserRepository Users { get; private set; }
+
+        public IRoleRepository Roles { get; private set; }
         
-        public UnitOfWork(PuppyParadiseContext puppyParadiseContext, IUserRepository userRepository) 
+        public UnitOfWork(PuppyParadiseContext puppyParadiseContext, IUserRepository userRepository, IRoleRepository roleRepository) 
         {
             _puppyParadiseContext = puppyParadiseContext;
             Users = userRepository;
+            Roles = roleRepository;
         }
 
         public void Dispose()

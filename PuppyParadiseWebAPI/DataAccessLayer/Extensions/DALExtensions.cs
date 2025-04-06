@@ -23,7 +23,7 @@ namespace DataAccessLayer.Extensions
             // Registracija repozitorijuma i Unit of Work
             services.AddScoped<IUnitOfWork, DataAccessLayer.UnitOfWork.UnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
-            
+            services.AddScoped<IRoleRepository, RoleRepository>();
 
             return services;
         }

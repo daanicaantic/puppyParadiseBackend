@@ -11,7 +11,8 @@ namespace DataAccessLayer.UnitOfWork
     {
         IUserRepository Users { get; }
 
-        Task SaveChangesAsync();
+        IRoleRepository Roles { get; }
 
+        Task SaveChangesAsync();
     }
 }
