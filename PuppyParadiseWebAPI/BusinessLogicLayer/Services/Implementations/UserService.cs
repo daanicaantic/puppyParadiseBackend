@@ -16,12 +16,23 @@ namespace BusinessLogicLayer.Services.Implementations
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
+
         public UserService(IUnitOfWork unitOfWork) 
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task AddUser(UserDTO user)
+
+        public async Task AddUser(UserDTO userDTO)
         {
+            var user = new User
+            {
+                Name = userDTO.Name,
+                Surname = userDTO.Surname,
+                Email = userDTO.Email,
+                PhoneNumber = userDTO.PhoneNumber,
+                RoleId = userDTO.RoleId,
+            };
+
             await _unitOfWork.Users.AddUser(user);
             await _unitOfWork.SaveChangesAsync();
         }
@@ -31,7 +42,10 @@ namespace BusinessLogicLayer.Services.Implementations
             var user = await _unitOfWork.Users.GetUser(id);
             if (user == null)
                 throw new Exception("User with this ID doesn't exist.");
-            return user;
+
+            var u = new UserDTO(user.Name, user.Surname, user.Email, user.PhoneNumber, user.RoleId, user.Role.Name);
+
+            return u;
         }
 
         public async Task DeleteUser(int id)

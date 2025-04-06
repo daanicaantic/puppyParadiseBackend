@@ -10,9 +10,9 @@ namespace DataAccessLayer.Repositories.Interfaces
 {
     public interface IUserRepository : IRepository<User>
     {
-        Task AddUser(UserDTO userDTO);
+        Task AddUser(User user);
 
-        Task<UserDTO> GetUser(int id);
+        Task<User> GetUser(int id);
 
         Task<User> GetByEmail(string email);
 
