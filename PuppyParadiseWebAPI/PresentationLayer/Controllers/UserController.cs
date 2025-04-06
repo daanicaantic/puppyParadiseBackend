@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace PresentationLayer.Controllers
-{
+{ 
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -30,7 +30,7 @@ namespace PresentationLayer.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 

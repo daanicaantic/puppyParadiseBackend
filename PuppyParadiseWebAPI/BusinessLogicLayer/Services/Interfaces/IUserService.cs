@@ -16,7 +16,7 @@ namespace BusinessLogicLayer.Services.Interfaces
 
         Task DeleteUser(int id);
 
-        Task<User> GetUserByEmail (string email);
+        Task<UserDTO> GetUserByEmail (string email);
 
         Task<User> GetUserByPhoneNumber(string phoneNumber);
 

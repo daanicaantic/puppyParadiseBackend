@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DomainLayer.Constants
+﻿namespace DomainLayer.Constants
 {
-    public class ConstServiceTypes
+    public static class ConstServiceTypes
     {
         public const string Grooming = "Grooming";
         public const string Walking = "Walking";
