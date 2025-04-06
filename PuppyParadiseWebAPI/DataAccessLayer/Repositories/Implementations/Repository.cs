@@ -1,12 +1,7 @@
 ﻿using DataAccessLayer.Context;
 using DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+#nullable disable
 
 namespace DataAccessLayer.Repositories.Implementations
 {
@@ -22,8 +17,6 @@ namespace DataAccessLayer.Repositories.Implementations
         public async Task<T> GetById(int id)
         {
             var obj = await _puppyParadiseContext.Set<T>().FindAsync(id);
-            if (obj == null)
-                throw new Exception("Object with this ID doesn't exist.");
             return obj;
         }
         public async Task<List<T>> GetAll()

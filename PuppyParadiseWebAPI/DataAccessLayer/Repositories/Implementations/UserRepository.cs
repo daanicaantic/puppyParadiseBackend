@@ -17,16 +17,6 @@ namespace DataAccessLayer.Repositories.Implementations
         {
         }
 
-        public async Task AddUser(User user)
-        {
-            var role = await _puppyParadiseContext.Roles.FirstOrDefaultAsync(r => r.Id == user.RoleId);
-            if (role == null)
-                throw new Exception("Role not found!");
-            
-            user.Role = role;
-
-            await base.Add(user);
-        }
         public async Task<User> GetUser(int id)
         {
             var user = await _puppyParadiseContext.Users
@@ -38,11 +28,19 @@ namespace DataAccessLayer.Repositories.Implementations
         }
 
 
-        public async Task<User> GetByEmail(string email)
+        public async Task<UserDTO> GetByEmail(string email)
         {
-            var user = await  _puppyParadiseContext.Users.FirstOrDefaultAsync(u => u.Email == email);
-            if (user == null)
-                throw new Exception("Wrong email!");
+            var user = await  _puppyParadiseContext.Users
+                .Select(x=>new UserDTO
+                {
+                    Name=x.Name,
+                    Surname=x.Surname,
+                    Email=x.Email,
+                    PhoneNumber=x.PhoneNumber,
+                    RoleName=x.Role.Name,
+                    RoleId=x.Role.Id
+                })
+                .FirstOrDefaultAsync(u => u.Email == email);
             return user;
         }
 

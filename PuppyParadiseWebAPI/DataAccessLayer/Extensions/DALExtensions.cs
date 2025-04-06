@@ -22,8 +22,15 @@ namespace DataAccessLayer.Extensions
 
             // Registracija repozitorijuma i Unit of Work
             services.AddScoped<IUnitOfWork, DataAccessLayer.UnitOfWork.UnitOfWork>();
-            services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            services.AddScoped<IDogRepository, DogRepository>();
+            services.AddScoped<IGroomingPackageRepository, GroomingPackageRepository>();
+            services.AddScoped<IGroomingPackageServiceRepository, GroomingPackageServiceRepository>();
+            services.AddScoped<IGroomingServiceRepository, GroomingServiceRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IServiceTypeRepository, ServiceTypeRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             return services;
         }

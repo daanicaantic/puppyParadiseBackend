@@ -1,4 +1,5 @@
-﻿using BusinessLogicLayer.Services.Interfaces;
+﻿using BusinessLogicLayer.Constants.ExceptionsConstants;
+using BusinessLogicLayer.Services.Interfaces;
 using DataAccessLayer.Context;
 using DataAccessLayer.Repositories.Implementations;
 using DataAccessLayer.Repositories.Interfaces;
@@ -24,6 +25,10 @@ namespace BusinessLogicLayer.Services.Implementations
 
         public async Task AddUser(UserDTO userDTO)
         {
+            var role = await _unitOfWork.Roles.GetById(userDTO.RoleId);
+            if (role == null)
+                throw new Exception("Role not found!");
+
             var user = new User
             {
                 Name = userDTO.Name,
@@ -33,7 +38,7 @@ namespace BusinessLogicLayer.Services.Implementations
                 RoleId = userDTO.RoleId,
             };
 
-            await _unitOfWork.Users.AddUser(user);
+            await _unitOfWork.Users.Add(user);
             await _unitOfWork.SaveChangesAsync();
         }
 
@@ -41,7 +46,7 @@ namespace BusinessLogicLayer.Services.Implementations
         {
             var user = await _unitOfWork.Users.GetUser(id);
             if (user == null)
-                throw new Exception("User with this ID doesn't exist.");
+                throw new Exception(UserExceptionsConstants.UserWithGivenIdNotFound);
 
             var u = new UserDTO(user.Name, user.Surname, user.Email, user.PhoneNumber, user.RoleId, user.Role.Name);
 
@@ -52,12 +57,12 @@ namespace BusinessLogicLayer.Services.Implementations
         {
             var user = await _unitOfWork.Users.GetById(id);
             if (user == null)
-                throw new Exception("User with this ID doesn't exist.");
+                throw new Exception(UserExceptionsConstants.UserWithGivenIdNotFound);
             _unitOfWork.Users.Delete(user);
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<User> GetUserByEmail(string email)
+        public async Task<UserDTO> GetUserByEmail(string email)
         {
             var user = await _unitOfWork.Users.GetByEmail(email);
             if (user == null)
