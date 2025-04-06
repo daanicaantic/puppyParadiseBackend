@@ -16,47 +16,25 @@ namespace DataAccessLayer.Repositories.Implementations
         public UserRepository(PuppyParadiseContext puppyParadiseContext) : base(puppyParadiseContext)
         {
         }
-        public async Task AddUser(UserDTO userDTO)
+
+        public async Task AddUser(User user)
         {
-            var role = await _puppyParadiseContext.Roles.FirstOrDefaultAsync(r => r.Id == userDTO.RoleId);
+            var role = await _puppyParadiseContext.Roles.FirstOrDefaultAsync(r => r.Id == user.RoleId);
             if (role == null)
                 throw new Exception("Role not found!");
-            var user = new User
-            {
-                Name = userDTO.Name,
-                Surname = userDTO.Surname,
-                Email = userDTO.Email,
-                PhoneNumber = userDTO.PhoneNumber,
-                RoleId = userDTO.RoleId,
-            };
+            
+            user.Role = role;
+
             await base.Add(user);
         }
-        public async Task<UserDTO> GetUser(int id)
+        public async Task<User> GetUser(int id)
         {
-            /*return await _puppyParadiseContext.Users
-                .Include(u => u.Role)
-                .Where(u => u.Id == id)
-                .Select(u => new UserDTO
-                {
-                    Name = u.Name,
-                    Surname = u.Surname,
-                    Email = u.Email,
-                    PhoneNumber = u.PhoneNumber,
-                    RoleId = u.RoleId,
-                    RoleName = u.Role.Name
-                })
-                .FirstOrDefaultAsync();*/
-
             var user = await _puppyParadiseContext.Users
                 .Include(u => u.Role)
                 .Where(u => u.Id == id)
                 .FirstOrDefaultAsync();
-            if(user == null)
-                throw new Exception("User not found!");
 
-            var u = new UserDTO(user.Name, user.Surname, user.Email, user.PhoneNumber, user.RoleId, user.Role.Name);
-            return u;
-   
+            return user;
         }
 
 
