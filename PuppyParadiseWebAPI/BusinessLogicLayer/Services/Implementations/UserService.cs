@@ -16,12 +16,10 @@ namespace BusinessLogicLayer.Services.Implementations
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
-
         public UserService(IUnitOfWork unitOfWork) 
         {
             _unitOfWork = unitOfWork;
         }
-
         public async Task AddUser(UserDTO user)
         {
             await _unitOfWork.Users.AddUser(user);
