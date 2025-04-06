@@ -20,6 +20,13 @@ namespace BusinessLogicLayer.Extensions
         {
             services.AddDALServices(configuration);
 
+            services.AddScoped<IAppointmentService, AppointmentService>();
+            services.AddScoped<IDogService, DogService>();
+            services.AddScoped<IGroomingPackageService, GroomingPackageService>();
+            services.AddScoped<IGroomingPackageServiceService, GroomingPackageServiceService>();
+            services.AddScoped<IGroomingServiceService, GroomingServiceService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IServiceTypeService, ServiceTypeService>();
             services.AddScoped<IUserService, UserService>();
 
             return services;
