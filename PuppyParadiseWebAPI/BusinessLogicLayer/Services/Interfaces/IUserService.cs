@@ -1,4 +1,5 @@
-﻿using DomainLayer.Models;
+﻿using DomainLayer.DTOs;
+using DomainLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,15 @@ namespace BusinessLogicLayer.Services.Interfaces
 {
     public interface IUserService
     {
-        Task AddUser(User user);
-        Task<User> GetUserById(int id); 
+        Task AddUser(UserDTO user);
+
+        Task<UserDTO> GetUserById(int id);
+
+        Task DeleteUser(int id);
+
+        Task<User> GetUserByEmail (string email);
+
+        Task<User> GetUserByPhoneNumber(string phoneNumber);
+
     }
 }

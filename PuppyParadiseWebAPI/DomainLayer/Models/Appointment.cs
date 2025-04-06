@@ -26,6 +26,8 @@ namespace DomainLayer.Models
 
         public int? GroomingPackageId { get; set; }
 
+        public GroomingPackage GroomingPackage { get; set; }
+
         public List<GroomingService>? ExtraGroomingServices { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using DataAccessLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(PuppyParadiseContext))]
-    partial class PuppyParadiseContextModelSnapshot : ModelSnapshot
+    [Migration("20250404112352_model3")]
+    partial class model3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,28 +222,6 @@ namespace DataAccessLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ServiceTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Grooming"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Walking"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Sitting"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Training"
-                        });
                 });
 
             modelBuilder.Entity("DomainLayer.Models.User", b =>

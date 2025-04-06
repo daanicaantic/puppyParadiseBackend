@@ -21,7 +21,10 @@ namespace DataAccessLayer.Repositories.Implementations
 
         public async Task<T> GetById(int id)
         {
-            return await _puppyParadiseContext.Set<T>().FindAsync(id);
+            var obj = await _puppyParadiseContext.Set<T>().FindAsync(id);
+            if (obj == null)
+                throw new Exception("Object with this ID doesn't exist.");
+            return obj;
         }
         public async Task<List<T>> GetAll()
         {
