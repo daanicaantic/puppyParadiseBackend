@@ -1,4 +1,5 @@
-﻿using BusinessLogicLayer.Constants.ExceptionsConstants;
+﻿using AutoMapper;
+using BusinessLogicLayer.Constants.ExceptionsConstants;
 using BusinessLogicLayer.Services.Interfaces;
 using DataAccessLayer.Context;
 using DataAccessLayer.Repositories.Implementations;
@@ -17,10 +18,13 @@ namespace BusinessLogicLayer.Services.Implementations
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public UserService(IUnitOfWork unitOfWork) 
+
+        public UserService(IUnitOfWork unitOfWork,IMapper mapper) 
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task AddUser(UserDTO userDTO)
@@ -29,14 +33,15 @@ namespace BusinessLogicLayer.Services.Implementations
             if (role == null)
                 throw new Exception("Role not found!");
 
-            var user = new User
+           /*var user = new User
             {
                 Name = userDTO.Name,
                 Surname = userDTO.Surname,
                 Email = userDTO.Email,
                 PhoneNumber = userDTO.PhoneNumber,
                 RoleId = userDTO.RoleId,
-            };
+            };*/
+            var user = _mapper.Map<User>(userDTO);
 
             await _unitOfWork.Users.Add(user);
             await _unitOfWork.SaveChangesAsync();
@@ -48,9 +53,10 @@ namespace BusinessLogicLayer.Services.Implementations
             if (user == null)
                 throw new Exception(UserExceptionsConstants.UserWithGivenIdNotFound);
 
-            var u = new UserDTO(user.Name, user.Surname, user.Email, user.PhoneNumber, user.RoleId, user.Role.Name);
+            //var u = new UserDTO(user.Name, user.Surname, user.Email, user.PhoneNumber, user.RoleId, user.Role.Name);
+            var us = _mapper.Map<UserDTO>(user);
 
-            return u;
+            return us;
         }
 
         public async Task DeleteUser(int id)
