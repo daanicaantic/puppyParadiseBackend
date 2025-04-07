@@ -2,7 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using DataAccessLayer.Context;
 using DataAccessLayer.Repositories.Interfaces;
-using DomainLayer.DTOs;
+using DomainLayer.DTOs.UserDTOs;
 using DomainLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using System;

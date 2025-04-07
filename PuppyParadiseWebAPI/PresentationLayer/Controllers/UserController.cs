@@ -2,7 +2,7 @@
 using BusinessLogicLayer.Services.Interfaces;
 using DataAccessLayer.Context;
 using DataAccessLayer.Repositories.Interfaces;
-using DomainLayer.DTOs;
+using DomainLayer.DTOs.UserDTOs;
 using DomainLayer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

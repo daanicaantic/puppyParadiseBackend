@@ -5,7 +5,8 @@ using DataAccessLayer.Context;
 using DataAccessLayer.Repositories.Implementations;
 using DataAccessLayer.Repositories.Interfaces;
 using DataAccessLayer.UnitOfWork;
-using DomainLayer.DTOs;
+using DomainLayer.Constants;
+using DomainLayer.DTOs.UserDTOs;
 using DomainLayer.Models;
 using System;
 using System.Collections.Generic;
@@ -33,14 +34,14 @@ namespace BusinessLogicLayer.Services.Implementations
             if (role == null)
                 throw new Exception("Role not found!");
 
-           /*var user = new User
-            {
-                Name = userDTO.Name,
-                Surname = userDTO.Surname,
-                Email = userDTO.Email,
-                PhoneNumber = userDTO.PhoneNumber,
-                RoleId = userDTO.RoleId,
-            };*/
+            /*var user = new User
+             {
+                 Name = userDTO.Name,
+                 Surname = userDTO.Surname,
+                 Email = userDTO.Email,
+                 PhoneNumber = userDTO.PhoneNumber,
+                 RoleId = userDTO.RoleId,
+             };*/
             var user = _mapper.Map<User>(userDTO);
 
             await _unitOfWork.Users.Add(user);

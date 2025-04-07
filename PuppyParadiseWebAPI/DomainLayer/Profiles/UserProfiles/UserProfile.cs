@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using DomainLayer.DTOs;
+using DomainLayer.DTOs.UserDTOs;
 using DomainLayer.Models;
 
 namespace DomainLayer.Profiles.UserProfiles
@@ -14,8 +14,6 @@ namespace DomainLayer.Profiles.UserProfiles
         public UserProfile()
         {
             CreateMap<User, UserDTO>()
-                   .ForMember(dest => dest.RoleName,
-                       opt => opt.MapFrom(src => src.Role.Name))
                    .ReverseMap();
         }
     }

@@ -20,6 +20,6 @@ namespace DomainLayer.Models
 
         public double LargeDogPrice { get; set; }
 
-        public List<GroomingPackageService> Services { get; set; }
+        public List<GroomingPackageService> IncludedServices { get; set; }
     }
 }

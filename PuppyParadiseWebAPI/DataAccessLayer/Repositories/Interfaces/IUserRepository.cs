@@ -1,4 +1,4 @@
-﻿using DomainLayer.DTOs;
+﻿using DomainLayer.DTOs.UserDTOs;
 using DomainLayer.Models;
 using System;
 using System.Collections.Generic;
