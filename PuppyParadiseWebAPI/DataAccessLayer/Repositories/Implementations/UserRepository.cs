@@ -1,4 +1,6 @@
-﻿using DataAccessLayer.Context;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using DataAccessLayer.Context;
 using DataAccessLayer.Repositories.Interfaces;
 using DomainLayer.DTOs;
 using DomainLayer.Models;
@@ -13,8 +15,10 @@ namespace DataAccessLayer.Repositories.Implementations
 {
     public class UserRepository : Repository<User>, IUserRepository
     {
-        public UserRepository(PuppyParadiseContext puppyParadiseContext) : base(puppyParadiseContext)
+        private readonly IMapper _mapper;
+        public UserRepository(PuppyParadiseContext puppyParadiseContext, IMapper mapper) : base(puppyParadiseContext)
         {
+            _mapper = mapper;
         }
 
         public async Task<User> GetUser(int id)
@@ -27,20 +31,11 @@ namespace DataAccessLayer.Repositories.Implementations
             return user;
         }
 
-
         public async Task<UserDTO> GetByEmail(string email)
         {
             var user = await  _puppyParadiseContext.Users
-                .Select(x=>new UserDTO
-                {
-                    Name=x.Name,
-                    Surname=x.Surname,
-                    Email=x.Email,
-                    PhoneNumber=x.PhoneNumber,
-                    RoleName=x.Role.Name,
-                    RoleId=x.Role.Id
-                })
-                .FirstOrDefaultAsync(u => u.Email == email);
+             .ProjectTo<UserDTO>(_mapper.ConfigurationProvider)
+             .FirstOrDefaultAsync(u => u.Email == email);
             return user;
         }
 
