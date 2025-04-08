@@ -14,20 +14,11 @@ namespace DomainLayer.Models
 
         public Dog Dog { get; set; }
 
-        public int ServiceTypeId { get; set; }
-
-        public ServiceType ServiceType { get; set; }
-
-        public DateTime AppointmentDate { get; set; }
+        public DateTime AppointmentDateTime { get; set; }
 
         public double TotalPrice { get; set; }
 
-        public int? Time { get; set; }
+        public IList<AppointmentService> AppointmentServices { get; set; }
 
-        public int? GroomingPackageId { get; set; }
-
-        public GroomingPackage GroomingPackage { get; set; }
-
-        public List<GroomingService>? ExtraGroomingServices { get; set; }
     }
 }

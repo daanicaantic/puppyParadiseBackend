@@ -38,6 +38,8 @@ namespace DataAccessLayer.Context
 
             ServiceTypeSeeder.SeedServiceType(modelBuilder);
 
+            DogSizeSeeder.SeedDogSizes(modelBuilder);
+
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Role)
                 .WithMany()  // Now Role has Users collection
