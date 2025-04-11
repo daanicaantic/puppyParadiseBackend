@@ -14,12 +14,7 @@ namespace DomainLayer.Models
 
         public string Description { get; set; }
 
-        public double SmallDogPrice { get; set; }
+        public double Price { get; set; }
 
-        public double MediumDogPrice { get; set; }
-
-        public double LargeDogPrice { get; set; }
-
-        public List<GroomingPackageService> IncludedServices { get; set; }
     }
 }

@@ -6,16 +6,12 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.Models
 {
-    public class TrainingDetails
+    public class SittingPackage
     {
         public int Id { get; set; }
 
-        public int TrainingPackageId { get; set; }
-
-        public TrainingPackage Package { get; set; }
+        public string Name { get; set; } //PricePerDay/ PricePerHour
 
         public double Price { get; set; }
-
-        //logika za zakazivanje svakog termina pojedinacno
     }
 }
