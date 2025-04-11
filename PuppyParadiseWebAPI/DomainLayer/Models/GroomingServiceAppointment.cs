@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.Models
 {
-    public class GroomingPackageService
+    public class GroomingServiceAppointment
     {
         public int Id { get; set; }
-
-        public int GroomingPackageId { get; set; }
-
-        public GroomingPackage GroomingPackage { get; set; }
+        public int AppointmentGroomingId { get; set; }
+        
+        public AppointmentGrooming AppointmentGrooming { get; set; }
 
         public int GroomingServiceId { get; set; }
 
-        public GroomingService GroomingService { get; set; }
+        public GroomingService GromingService { get; set; } 
     }
 }

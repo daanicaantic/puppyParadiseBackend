@@ -4,6 +4,7 @@ using DataAccessLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(PuppyParadiseContext))]
-    partial class PuppyParadiseContextModelSnapshot : ModelSnapshot
+    [Migration("20250411121241_model6")]
+    partial class model6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -318,6 +321,9 @@ namespace DataAccessLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("AppointmentGroomingId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -331,30 +337,9 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GroomingServices");
-                });
-
-            modelBuilder.Entity("DomainLayer.Models.GroomingServiceAppointment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AppointmentGroomingId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GroomingServiceId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
                     b.HasIndex("AppointmentGroomingId");
 
-                    b.HasIndex("GroomingServiceId");
-
-                    b.ToTable("GroomingServiceAppointments");
+                    b.ToTable("GroomingServices");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Role", b =>
@@ -672,23 +657,11 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("DomainLayer.Models.GroomingServiceAppointment", b =>
+            modelBuilder.Entity("DomainLayer.Models.GroomingService", b =>
                 {
-                    b.HasOne("DomainLayer.Models.AppointmentGrooming", "AppointmentGrooming")
+                    b.HasOne("DomainLayer.Models.AppointmentGrooming", null)
                         .WithMany("ExtraServices")
-                        .HasForeignKey("AppointmentGroomingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DomainLayer.Models.GroomingService", "GromingService")
-                        .WithMany("AppointmentGroomingServices")
-                        .HasForeignKey("GroomingServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppointmentGrooming");
-
-                    b.Navigation("GromingService");
+                        .HasForeignKey("AppointmentGroomingId");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.User", b =>
@@ -705,11 +678,6 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("DomainLayer.Models.AppointmentGrooming", b =>
                 {
                     b.Navigation("ExtraServices");
-                });
-
-            modelBuilder.Entity("DomainLayer.Models.GroomingService", b =>
-                {
-                    b.Navigation("AppointmentGroomingServices");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.User", b =>

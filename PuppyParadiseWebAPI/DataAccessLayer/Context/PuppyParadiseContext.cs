@@ -20,15 +20,29 @@ namespace DataAccessLayer.Context
 
         public DbSet<Dog> Dogs { get; set; }
 
+        public DbSet<DogSize> DogSizes { get; set; }
+
         public DbSet<GroomingService> GroomingServices { get; set; }
 
         public DbSet<GroomingPackage> GroomingPackages { get; set; }
 
-        public DbSet<GroomingPackageService> GroomingPackageServices { get; set; }
+        public DbSet<AppointmentGrooming> AppointmentGroomings { get; set; }
 
         public DbSet<ServiceType> ServiceTypes { get; set; }
 
-        public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<SittingPackage> SittingPackages { get; set; }
+
+        public DbSet<AppointmentSitting> AppointmentSittings { get; set; }
+
+        public DbSet<WalkingPackage> WalkingPackages { get; set; }
+
+        public DbSet<AppointmentWalking> AppointmentWalkings { get; set; }
+
+        public DbSet<TrainingPackage> TrainingPackages { get; set; }
+
+        public DbSet<AppointmentTraining> AppointmentTrainings { get; set; }
+
+        public DbSet<GroomingServiceAppointment> GroomingServiceAppointments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,6 +58,62 @@ namespace DataAccessLayer.Context
                 .HasOne(u => u.Role)
                 .WithMany()  // Now Role has Users collection
                 .HasForeignKey(u => u.RoleId);
+
+            modelBuilder.Entity<AppointmentGrooming>()
+            .HasOne(ag => ag.User)
+            .WithMany()
+            .HasForeignKey(ag => ag.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AppointmentGrooming>()
+            .HasOne(ag => ag.Dog)
+            .WithMany()
+            .HasForeignKey(ag => ag.DogId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AppointmentGrooming>()
+            .HasOne(ag => ag.GroomingPackage)
+            .WithMany()
+            .HasForeignKey(ag => ag.GroomingPackageId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AppointmentSitting>()
+            .HasOne(ag => ag.User)
+            .WithMany()
+            .HasForeignKey(ag => ag.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AppointmentSitting>()
+            .HasOne(ag => ag.Dog)
+            .WithMany()
+            .HasForeignKey(ag => ag.DogId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AppointmentTraining>()
+            .HasOne(ag => ag.User)
+            .WithMany()
+            .HasForeignKey(ag => ag.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AppointmentTraining>()
+            .HasOne(ag => ag.Dog)
+            .WithMany()
+            .HasForeignKey(ag => ag.DogId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AppointmentWalking>()
+            .HasOne(ag => ag.User)
+            .WithMany()
+            .HasForeignKey(ag => ag.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AppointmentWalking>()
+            .HasOne(ag => ag.Dog)
+            .WithMany()
+            .HasForeignKey(ag => ag.DogId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+
         }
     }
 }
