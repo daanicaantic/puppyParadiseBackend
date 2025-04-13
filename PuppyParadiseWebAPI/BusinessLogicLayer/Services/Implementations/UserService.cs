@@ -8,6 +8,7 @@ using DataAccessLayer.UnitOfWork;
 using DomainLayer.Constants;
 using DomainLayer.DTOs.UserDTOs;
 using DomainLayer.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +22,7 @@ namespace BusinessLogicLayer.Services.Implementations
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-
-        public UserService(IUnitOfWork unitOfWork,IMapper mapper) 
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper) 
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -82,6 +82,14 @@ namespace BusinessLogicLayer.Services.Implementations
             var user = await _unitOfWork.Users.GetByPhoneNumber(phoneNumber);
             if (user == null)
                 throw new Exception("User with this phone number doesn't exist.");
+            return user;
+        }
+
+        public async Task<User?> GetByCredentialsAsync(string email, string password)
+        {
+            var user = await _unitOfWork.Users.GetByCredentialsAsync(email, password);
+            if (user == null)
+                throw new Exception("User with this email and password doesn't exist.");
             return user;
         }
     }

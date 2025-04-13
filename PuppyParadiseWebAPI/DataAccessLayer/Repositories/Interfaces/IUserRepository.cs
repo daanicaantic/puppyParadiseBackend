@@ -15,5 +15,7 @@ namespace DataAccessLayer.Repositories.Interfaces
         Task<UserDTO> GetByEmail(string email);
 
         Task<User> GetByPhoneNumber(string phoneNumber);
+
+        Task<User?> GetByCredentialsAsync(string email, string password);
     }
 }
