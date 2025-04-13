@@ -1,4 +1,5 @@
-﻿using DataAccessLayer.Seeding;
+﻿using DataAccessLayer.Configurations;
+using DataAccessLayer.Seeding;
 using DomainLayer.Constants;
 using DomainLayer.Models;
 using Microsoft.EntityFrameworkCore;
@@ -54,66 +55,13 @@ namespace DataAccessLayer.Context
 
             DogSizeSeeder.SeedDogSizes(modelBuilder);
 
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Role)
-                .WithMany()  // Now Role has Users collection
-                .HasForeignKey(u => u.RoleId);
+            /*modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new AppointmentGroomingConfiguration());
+            modelBuilder.ApplyConfiguration(new AppointmentSittingConfiguration());
+            modelBuilder.ApplyConfiguration(new AppointmentTrainingConfiguration());
+            modelBuilder.ApplyConfiguration(new AppointmentWalkingConfiguration());*/
 
-            modelBuilder.Entity<AppointmentGrooming>()
-            .HasOne(ag => ag.User)
-            .WithMany()
-            .HasForeignKey(ag => ag.UserId)
-            .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<AppointmentGrooming>()
-            .HasOne(ag => ag.Dog)
-            .WithMany()
-            .HasForeignKey(ag => ag.DogId)
-            .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<AppointmentGrooming>()
-            .HasOne(ag => ag.GroomingPackage)
-            .WithMany()
-            .HasForeignKey(ag => ag.GroomingPackageId)
-            .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<AppointmentSitting>()
-            .HasOne(ag => ag.User)
-            .WithMany()
-            .HasForeignKey(ag => ag.UserId)
-            .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<AppointmentSitting>()
-            .HasOne(ag => ag.Dog)
-            .WithMany()
-            .HasForeignKey(ag => ag.DogId)
-            .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<AppointmentTraining>()
-            .HasOne(ag => ag.User)
-            .WithMany()
-            .HasForeignKey(ag => ag.UserId)
-            .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<AppointmentTraining>()
-            .HasOne(ag => ag.Dog)
-            .WithMany()
-            .HasForeignKey(ag => ag.DogId)
-            .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<AppointmentWalking>()
-            .HasOne(ag => ag.User)
-            .WithMany()
-            .HasForeignKey(ag => ag.UserId)
-            .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<AppointmentWalking>()
-            .HasOne(ag => ag.Dog)
-            .WithMany()
-            .HasForeignKey(ag => ag.DogId)
-            .OnDelete(DeleteBehavior.NoAction);
-
-
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(PuppyParadiseContext).Assembly);
         }
     }
 }

@@ -14,9 +14,9 @@ namespace DataAccessLayer.Seeding
         public static void SeedDogSizes(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<DogSize>().HasData(
-                new DogSize { Id = 1, Name = "Small", MinWeight = 0.0, MaxWeight = 10.0 },
-                new DogSize { Id = 2, Name = "Medium", MinWeight = 10.1, MaxWeight = 25.0 },
-                new DogSize { Id = 3, Name = "Large", MinWeight = 25.1, MaxWeight = 50.0 }
+                new DogSize { Id = 1, Name = ConstDogSizes.Small, MinWeight = 0.0, MaxWeight = 10.0 },
+                new DogSize { Id = 2, Name = ConstDogSizes.Medium, MinWeight = 10.1, MaxWeight = 25.0 },
+                new DogSize { Id = 3, Name = ConstDogSizes.Large, MinWeight = 25.1, MaxWeight = 50.0 }
             );
         }
     }
