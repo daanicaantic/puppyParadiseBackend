@@ -15,5 +15,7 @@ namespace DomainLayer.Models
         public string Description { get; set; }
 
         public double Price { get; set; }
+
+        public List<GroomingServiceAppointment> AppointmentGroomingServices { get; set; }
     }
 }

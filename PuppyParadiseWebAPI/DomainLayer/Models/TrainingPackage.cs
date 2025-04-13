@@ -14,16 +14,12 @@ namespace DomainLayer.Models
 
         public string Description { get; set; }
 
-        public TimeSpan Duration { get; set; } // trajanje kursa (npr. 2 weeks)
+        public TimeSpan DurationInWeeks { get; set; } // trajanje kursa (npr. 2 weeks)
 
         public int SessionsPerWeek { get; set; }
 
-        public TimeSpan SessionDuration { get; set; }
+        public TimeSpan SessionDuration { get; set; } // trajanje jednog termina
 
-        public double PriceSmall { get; set; }
-
-        public double PriceMedium { get; set; }
-
-        public double PriceLarge { get; set; }
+        public double Price { get; set; }
     }
 }
