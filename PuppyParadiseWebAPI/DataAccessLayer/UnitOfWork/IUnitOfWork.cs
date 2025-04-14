@@ -13,6 +13,8 @@ namespace DataAccessLayer.UnitOfWork
 
         IRoleRepository Roles { get; }
 
+        IGroomingPackageRepository GroomingPackages { get; }
+
         Task SaveChangesAsync();
     }
 }
