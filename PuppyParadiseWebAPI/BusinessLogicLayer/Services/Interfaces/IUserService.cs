@@ -20,5 +20,6 @@ namespace BusinessLogicLayer.Services.Interfaces
 
         Task<User> GetUserByPhoneNumber(string phoneNumber);
 
+        Task<User?> GetByCredentialsAsync(string email, string password);
     }
 }

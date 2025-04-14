@@ -46,5 +46,13 @@ namespace DataAccessLayer.Repositories.Implementations
                 throw new Exception("Wrong phone number!");
             return user;
         }
+
+        public async Task<User?> GetByCredentialsAsync(string email, string password)
+        {
+            var user = await _puppyParadiseContext.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+            return user;
+        }
     }
 }

@@ -26,6 +26,7 @@ namespace BusinessLogicLayer.Extensions
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IServiceTypeService, ServiceTypeService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ILoginService, LoginService>();
 
             return services;
         }
