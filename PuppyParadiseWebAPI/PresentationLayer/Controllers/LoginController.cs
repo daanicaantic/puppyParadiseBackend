@@ -22,7 +22,8 @@ namespace PresentationLayer.Controllers
             _userService = userService;
         }
 
-        [HttpPost("login")]
+        [Route("Login")]
+        [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
         {
             var user = await _userService.GetByCredentialsAsync(request.Email, request.Password);
