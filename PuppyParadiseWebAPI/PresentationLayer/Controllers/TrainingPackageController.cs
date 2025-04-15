@@ -48,7 +48,7 @@ namespace PresentationLayer.Controllers
 
         [Route("GetAllTrainingPackages")]
         [HttpGet]
-        public async Task<ActionResult<List<TrainingPackage>>> GetAllTrainingPackages()
+        public async Task<IActionResult> GetAllTrainingPackages()
         {
             try
             {

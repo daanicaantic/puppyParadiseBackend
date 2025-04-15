@@ -48,7 +48,7 @@ namespace PresentationLayer.Controllers
 
         [Route("GetAllSittingPackages")]
         [HttpGet]
-        public async Task<ActionResult<List<SittingPackage>>> GetAllSittingPackages()
+        public async Task<IActionResult> GetAllSittingPackages()
         {
             try
             {

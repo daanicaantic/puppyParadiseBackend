@@ -50,7 +50,7 @@ namespace PresentationLayer.Controllers
 
         [Route("GetAllGroomingPackages")]
         [HttpGet]
-        public async Task<ActionResult<List<GroomingPackage>>> GetAllGroomingPackages()
+        public async Task<IActionResult> GetAllGroomingPackages()
         {
             try
             {
