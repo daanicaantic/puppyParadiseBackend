@@ -14,5 +14,15 @@ namespace DataAccessLayer.Repositories.Implementations
         public TrainingPackageRepository(PuppyParadiseContext puppyParadiseContext) : base(puppyParadiseContext)
         {
         }
+
+        public void UpdateTrainingPackage(TrainingPackage tpOld, TrainingPackage tpNew)
+        {
+            tpOld.Name = tpNew.Name;
+            tpOld.Description = tpNew.Description;
+            tpOld.DurationInWeeks = tpNew.DurationInWeeks;
+            tpOld.SessionsPerWeek = tpNew.SessionsPerWeek;
+            tpOld.SessionDuration = tpNew.SessionDuration;
+            tpOld.Price = tpNew.Price;
+        }
     }
 }

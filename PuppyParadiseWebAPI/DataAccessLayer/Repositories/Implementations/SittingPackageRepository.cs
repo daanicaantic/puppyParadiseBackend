@@ -13,6 +13,13 @@ namespace DataAccessLayer.Repositories.Implementations
     {
         public SittingPackageRepository(PuppyParadiseContext puppyParadiseContext) : base(puppyParadiseContext)
         {
+
+        }
+
+        public void UpdateSittingPackage(SittingPackage spOld, SittingPackage spNew)
+        {
+            spOld.Name = spNew.Name;
+            spOld.Price = spNew.Price;
         }
     }
 }

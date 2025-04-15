@@ -14,7 +14,7 @@ namespace DomainLayer.Models
 
         public string Description { get; set; }
 
-        public TimeSpan DurationInWeeks { get; set; } // trajanje kursa (npr. 2 weeks)
+        public int DurationInWeeks { get; set; } // trajanje kursa (npr. 2 weeks)
 
         public int SessionsPerWeek { get; set; }
 
