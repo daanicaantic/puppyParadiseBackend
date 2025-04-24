@@ -10,5 +10,6 @@ namespace DataAccessLayer.Repositories.Interfaces
 {
     public interface ISittingPackageRepository : IRepository<SittingPackage>
     {
+        void UpdateSittingPackage(SittingPackage spOld, SittingPackage spNew);
     }
 }

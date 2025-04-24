@@ -10,5 +10,6 @@ namespace DataAccessLayer.Repositories.Interfaces
 {
     public interface ITrainingPackageRepository : IRepository<TrainingPackage>
     {
+        void UpdateTrainingPackage(TrainingPackage tpOld, TrainingPackage tpNew);
     }
 }
