@@ -7,6 +7,7 @@ using DataAccessLayer.Repositories.Interfaces;
 using DataAccessLayer.UnitOfWork;
 using DomainLayer.Constants;
 using DomainLayer.DTOs.UserDTOs;
+using DomainLayer.Helpers;
 using DomainLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -92,5 +93,23 @@ namespace BusinessLogicLayer.Services.Implementations
                 throw new Exception("User with this email and password doesn't exist.");
             return user;
         }
+
+        public async Task<PagedResult<UserDTO>> GetUsersPerPage(UserFilterDTO filter)
+        {
+            var users = await _unitOfWork.Users.GetUsersPerPageAsync(
+                filter.Name, filter.PhoneNumber, filter.RoleId, filter.Page, filter.PageSize);
+
+            var totalCount = await _unitOfWork.Users.GetUsersCountAsync(
+                filter.Name, filter.PhoneNumber, filter.RoleId);
+
+            return new PagedResult<UserDTO>
+            {
+                Items = _mapper.Map<List<UserDTO>>(users),
+                TotalCount = totalCount,
+                Page = filter.Page,
+                PageSize = filter.PageSize
+            };
+        }
+
     }
 }

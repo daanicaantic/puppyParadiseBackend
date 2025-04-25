@@ -17,5 +17,9 @@ namespace DataAccessLayer.Repositories.Interfaces
         Task<User> GetByPhoneNumber(string phoneNumber);
 
         Task<User?> GetByCredentialsAsync(string email, string password);
+
+        Task<List<User>> GetUsersPerPageAsync(string? name, string? phoneNumber, int? roleId, int page, int pageSize);
+
+        Task<int> GetUsersCountAsync(string? name, string? phoneNumber, int? roleId);
     }
 }

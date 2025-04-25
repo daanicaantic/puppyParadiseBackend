@@ -82,5 +82,21 @@ namespace PresentationLayer.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [Route("GetUsersPerPage")]
+        [HttpGet]
+        public async Task<IActionResult> GetUsersPerPage([FromQuery] UserFilterDTO filter)
+        {
+            try
+            {
+                var result = await _userService.GetUsersPerPage(filter);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

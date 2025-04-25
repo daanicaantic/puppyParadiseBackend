@@ -54,5 +54,55 @@ namespace DataAccessLayer.Repositories.Implementations
                 .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
             return user;
         }
+
+        public async Task<List<User>> GetUsersPerPageAsync(string? name, string? phoneNumber, int? roleId, int page, int pageSize)
+        {
+            var query = _puppyParadiseContext.Users
+                .Include(u => u.Role)
+                .AsQueryable();
+
+            if(!string.IsNullOrWhiteSpace(name))
+            {
+                query = query.Where(u => u.Name.Contains(name) || u.Surname.Contains(name));
+            }
+
+            if(!string.IsNullOrWhiteSpace(phoneNumber))
+            {
+                query = query.Where(u => u.PhoneNumber.Contains(phoneNumber));
+            }
+
+            if(roleId.HasValue)
+            {
+                query = query.Where(u => u.RoleId == roleId.Value);
+            }
+
+            return await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetUsersCountAsync(string? name, string? phoneNumber, int? roleId)
+        {
+            var query = _puppyParadiseContext.Users.AsQueryable();
+
+            if(!string.IsNullOrWhiteSpace(name))
+            {
+                query = query.Where(u => u.Name.Contains(name) || u.Surname.Contains(name));
+            }
+
+            if(!string.IsNullOrWhiteSpace(phoneNumber))
+            {
+                query = query.Where(u => u.PhoneNumber.Contains(phoneNumber));
+            }
+
+            if(roleId.HasValue)
+            {
+                query = query.Where(u => u.RoleId == roleId.Value);
+            }
+
+            return await query.CountAsync();
+        }
+
     }
 }
