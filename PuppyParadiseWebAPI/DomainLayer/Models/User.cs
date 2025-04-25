@@ -24,6 +24,6 @@ namespace DomainLayer.Models
 
         public Role? Role { get; set; }
 
-        public List<Dog>? Dogs { get; set; }
+        public List<DogUser>? Dogs { get; set; }
     }
 }
