@@ -11,6 +11,5 @@ namespace DataAccessLayer.Repositories.Interfaces
 {
     public interface IGroomingPackageRepository : IRepository<GroomingPackage>
     {
-        void UpdateGroomingPackage(GroomingPackage gpOld, GroomingPackage gpNew);
     }
 }
