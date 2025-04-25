@@ -16,6 +16,7 @@ namespace DataAccessLayer.UnitOfWork
         public IUserRepository Users { get; private set; }
         public IRoleRepository Roles { get; private set; }
         public IDogRepository Dogs { get; private set; }
+        public IDogSizeRepository DogSizes { get; private set; }
         public IGroomingPackageRepository GroomingPackages { get; private set; }
         public IGroomingServiceRepository GroomingServices { get; private set; }
         public IGroomingServiceAppointmentRepository GroomingServiceAppointments { get; private set; }
@@ -31,6 +32,7 @@ namespace DataAccessLayer.UnitOfWork
             IUserRepository userRepository,
             IRoleRepository roleRepository,
             IDogRepository dogRepository,
+            IDogSizeRepository dogSizeRepository,
             IGroomingPackageRepository groomingPackageRepository,
             IGroomingServiceRepository groomingServiceRepository,
             IGroomingServiceAppointmentRepository groomingServiceAppointmentRepository,
@@ -46,6 +48,7 @@ namespace DataAccessLayer.UnitOfWork
             Users = userRepository;
             Roles = roleRepository;
             Dogs = dogRepository;
+            DogSizes = dogSizeRepository;
             GroomingPackages = groomingPackageRepository;
             GroomingServices = groomingServiceRepository;
             GroomingServiceAppointments = groomingServiceAppointmentRepository;

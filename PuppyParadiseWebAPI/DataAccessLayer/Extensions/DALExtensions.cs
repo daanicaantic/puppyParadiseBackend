@@ -26,6 +26,7 @@ namespace DataAccessLayer.Extensions
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IDogRepository, DogRepository>();
+            services.AddScoped<IDogSizeRepository, DogSizeRepository>();
             services.AddScoped<IGroomingPackageRepository, GroomingPackageRepository>();
             services.AddScoped<IGroomingServiceRepository, GroomingServiceRepository>();
             services.AddScoped<IGroomingServiceAppointmentRepository, GroomingServiceAppointmentRepository>();
