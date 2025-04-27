@@ -23,6 +23,6 @@ namespace BusinessLogicLayer.Services.Interfaces
 
         Task<User?> GetByCredentialsAsync(string email, string password);
 
-        Task<PagedResult<UserDTO>> GetUsersPerPage(UserFilterDTO filter);
+        Task<PagedResult<UserDTO>> GetUsersPerPage(UserFilterDTO usersFilter);
     }
 }

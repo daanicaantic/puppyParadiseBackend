@@ -94,22 +94,11 @@ namespace BusinessLogicLayer.Services.Implementations
             return user;
         }
 
-        public async Task<PagedResult<UserDTO>> GetUsersPerPage(UserFilterDTO filter)
+        public async Task<PagedResult<UserDTO>> GetUsersPerPage(UserFilterDTO usersFilter)
         {
-            var users = await _unitOfWork.Users.GetUsersPerPageAsync(
-                filter.Name, filter.PhoneNumber, filter.RoleId, filter.Page, filter.PageSize);
+            var pagedResult = await _unitOfWork.Users.GetUsersPerPageAsync(usersFilter);
 
-            var totalCount = await _unitOfWork.Users.GetUsersCountAsync(
-                filter.Name, filter.PhoneNumber, filter.RoleId);
-
-            return new PagedResult<UserDTO>
-            {
-                Items = _mapper.Map<List<UserDTO>>(users),
-                TotalCount = totalCount,
-                Page = filter.Page,
-                PageSize = filter.PageSize
-            };
+            return pagedResult;
         }
-
     }
 }

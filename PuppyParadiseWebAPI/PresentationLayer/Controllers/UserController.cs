@@ -85,11 +85,11 @@ namespace PresentationLayer.Controllers
 
         [Route("GetUsersPerPage")]
         [HttpGet]
-        public async Task<IActionResult> GetUsersPerPage([FromQuery] UserFilterDTO filter)
+        public async Task<IActionResult> GetUsersPerPage([FromQuery] UserFilterDTO usersFilter)
         {
             try
             {
-                var result = await _userService.GetUsersPerPage(filter);
+                var result = await _userService.GetUsersPerPage(usersFilter);
 
                 return Ok(result);
             }

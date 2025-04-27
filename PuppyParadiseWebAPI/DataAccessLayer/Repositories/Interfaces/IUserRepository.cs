@@ -1,4 +1,5 @@
 ﻿using DomainLayer.DTOs.UserDTOs;
+using DomainLayer.Helpers;
 using DomainLayer.Models;
 using System;
 using System.Collections.Generic;
@@ -18,8 +19,6 @@ namespace DataAccessLayer.Repositories.Interfaces
 
         Task<User?> GetByCredentialsAsync(string email, string password);
 
-        Task<List<User>> GetUsersPerPageAsync(string? name, string? phoneNumber, int? roleId, int page, int pageSize);
-
-        Task<int> GetUsersCountAsync(string? name, string? phoneNumber, int? roleId);
+        Task<PagedResult<UserDTO>> GetUsersPerPageAsync(UserFilterDTO usersFilter);
     }
 }

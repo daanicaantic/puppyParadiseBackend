@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using DataAccessLayer.Context;
 using DataAccessLayer.Repositories.Interfaces;
 using DomainLayer.DTOs.UserDTOs;
+using DomainLayer.Helpers;
 using DomainLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -55,53 +56,45 @@ namespace DataAccessLayer.Repositories.Implementations
             return user;
         }
 
-        public async Task<List<User>> GetUsersPerPageAsync(string? name, string? phoneNumber, int? roleId, int page, int pageSize)
+        public async Task<PagedResult<UserDTO>> GetUsersPerPageAsync(UserFilterDTO usersFilter)
         {
             var query = _puppyParadiseContext.Users
                 .Include(u => u.Role)
                 .AsQueryable();
 
-            if(!string.IsNullOrWhiteSpace(name))
+            if (!string.IsNullOrWhiteSpace(usersFilter.Search))
             {
-                query = query.Where(u => u.Name.Contains(name) || u.Surname.Contains(name));
+                var words = usersFilter.Search.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                query = query.Where(u =>
+                    words.All(word =>
+                        u.Name.ToLower().Contains(word.ToLower()) ||
+                        u.Surname.ToLower().Contains(word.ToLower()) ||
+                        u.PhoneNumber.ToLower().Contains(word.ToLower()) ||
+                        u.Email.ToLower().Contains(word.ToLower())
+                    )
+                );
             }
 
-            if(!string.IsNullOrWhiteSpace(phoneNumber))
+            if (usersFilter.RoleId.HasValue)
             {
-                query = query.Where(u => u.PhoneNumber.Contains(phoneNumber));
+                query = query.Where(u => u.RoleId == usersFilter.RoleId.Value);
             }
 
-            if(roleId.HasValue)
-            {
-                query = query.Where(u => u.RoleId == roleId.Value);
-            }
+            var totalCount = await query.CountAsync();
 
-            return await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
+            var users = await query
+                .Skip((usersFilter.Page - 1) * usersFilter.PageSize)
+                .Take(usersFilter.PageSize)
                 .ToListAsync();
-        }
 
-        public async Task<int> GetUsersCountAsync(string? name, string? phoneNumber, int? roleId)
-        {
-            var query = _puppyParadiseContext.Users.AsQueryable();
-
-            if(!string.IsNullOrWhiteSpace(name))
+            return new PagedResult<UserDTO>
             {
-                query = query.Where(u => u.Name.Contains(name) || u.Surname.Contains(name));
-            }
-
-            if(!string.IsNullOrWhiteSpace(phoneNumber))
-            {
-                query = query.Where(u => u.PhoneNumber.Contains(phoneNumber));
-            }
-
-            if(roleId.HasValue)
-            {
-                query = query.Where(u => u.RoleId == roleId.Value);
-            }
-
-            return await query.CountAsync();
+                Items = _mapper.Map<List<UserDTO>>(users),
+                TotalCount = totalCount,
+                Page = usersFilter.Page,
+                PageSize = usersFilter.PageSize
+            };
         }
 
     }

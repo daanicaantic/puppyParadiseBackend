@@ -8,8 +8,7 @@ namespace DomainLayer.DTOs.UserDTOs
 {
     public class UserFilterDTO
     {
-        public string? Name { get; set; }
-        public string? PhoneNumber { get; set; }
+        public string? Search { get; set; }
         public int? RoleId { get; set; }
 
         public int Page { get; set; } = 1;
