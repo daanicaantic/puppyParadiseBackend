@@ -22,7 +22,7 @@ namespace PresentationLayer.Controllers
 
         [Route("AddUser")]
         [HttpPost]
-        public async Task<IActionResult> AddUser([FromBody] UserDTO user)
+        public async Task<IActionResult> AddUser([FromBody] AddUserDTO user)
         {
             try
             {
@@ -76,6 +76,22 @@ namespace PresentationLayer.Controllers
                 var user = await _userService.GetUserByPhoneNumber(phoneNumber);
 
                 return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Route("DeleteUser/{id}")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            try
+            {
+                await _userService.DeleteUser(id);
+
+                return Ok();
             }
             catch (Exception ex)
             {

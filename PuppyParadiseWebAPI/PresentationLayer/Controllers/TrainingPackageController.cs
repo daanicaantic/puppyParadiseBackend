@@ -62,7 +62,7 @@ namespace PresentationLayer.Controllers
         }
 
         [Route("UpdateTrainingPackage")]
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> UpdateTrainingPackage([FromBody] TrainingPackage trainingPackage)
         {
             try

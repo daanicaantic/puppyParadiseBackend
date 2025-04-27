@@ -6,26 +6,22 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.DTOs.UserDTOs
 {
-    public class UserDTO
+    public class GetUserDTO : UserDTO
     {
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public int RoleId { get; set; }
+        public string RoleName { get; set; }
 
-        public UserDTO()
+        public GetUserDTO()
         {
 
         }
-
-        public UserDTO(string name, string surname, string email, string phoneNumber, int roleId)
+        public GetUserDTO(string name, string surname, string email, string phoneNumber, int roleId, string roleName)
         {
             Name = name;
             Surname = surname;
             Email = email;
             PhoneNumber = phoneNumber;
             RoleId = roleId;
+            RoleName = roleName;
         }
     }
 }

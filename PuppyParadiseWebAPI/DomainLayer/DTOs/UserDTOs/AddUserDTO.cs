@@ -3,27 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DomainLayer.Models;
+using System.Xml.Linq;
 
 namespace DomainLayer.DTOs.UserDTOs
 {
-    public class UserDTO
+    public class AddUserDTO : UserDTO
     {
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public int RoleId { get; set; }
+        public string Password { get; set; }
 
-        public UserDTO()
+        public AddUserDTO()
         {
 
         }
 
-        public UserDTO(string name, string surname, string email, string phoneNumber, int roleId)
+        public AddUserDTO(string name, string surname, string email, string password, string phoneNumber, int roleId)
         {
             Name = name;
             Surname = surname;
             Email = email;
+            Password = password;
             PhoneNumber = phoneNumber;
             RoleId = roleId;
         }

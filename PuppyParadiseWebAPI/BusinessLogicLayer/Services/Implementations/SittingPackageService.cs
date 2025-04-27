@@ -36,18 +36,16 @@ namespace BusinessLogicLayer.Services.Implementations
         public async Task<List<SittingPackage>> GetAllSittingPackages()
         {
             var packages = await _unitOfWork.SittingPackages.GetAll();
-            if (packages == null)
-                throw new Exception(SittingPackageExceptionsConstants.SittingPackageListNotFound);
+            
             return packages;
         }
 
         public async Task UpdateSittingPackage(SittingPackage sittingPackage)
         {
-            var spForEdit = await _unitOfWork.SittingPackages.GetById(sittingPackage.Id);
-            if (spForEdit == null)
-                throw new Exception(SittingPackageExceptionsConstants.SittingPackageWithGivenIdNotFound);
+            var spForEdit = await GetSittingPackageById(sittingPackage.Id);
 
-            _unitOfWork.SittingPackages.UpdateSittingPackage(spForEdit, sittingPackage);
+            spForEdit.Name = sittingPackage.Name;
+            spForEdit.Price = sittingPackage.Price;
 
             _unitOfWork.SittingPackages.Update(spForEdit);
 
@@ -56,9 +54,7 @@ namespace BusinessLogicLayer.Services.Implementations
 
         public async Task DeleteSittingPackage(int sittingPackageId)
         {
-            var sittingPackage = await _unitOfWork.SittingPackages.GetById(sittingPackageId);
-            if (sittingPackage == null)
-                throw new Exception(SittingPackageExceptionsConstants.SittingPackageWithGivenIdNotFound);
+            var sittingPackage = await GetSittingPackageById(sittingPackageId);
 
             _unitOfWork.SittingPackages.Delete(sittingPackage);
 

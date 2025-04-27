@@ -64,7 +64,7 @@ namespace PresentationLayer.Controllers
         }
 
         [Route("UpdateGroomingPackage")]
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> UpdateGroomingPackage([FromBody] GroomingPackage groomingPackage)
         {
             try
