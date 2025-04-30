@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogicLayer.Constants.ExceptionsConstants
 {
-    internal class GroomingServiceExceptionsConstants
+    public class GroomingServiceExceptionsConstants
     {
         public const string GroomingServiceWithGivenIdNotFound = "Grooming service with this ID doesn't exist.";
     }

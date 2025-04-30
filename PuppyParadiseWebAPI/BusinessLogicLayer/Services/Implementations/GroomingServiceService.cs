@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using BusinessLogicLayer.Constants.ExceptionsConstants;
 using BusinessLogicLayer.Services.Interfaces;
 using DataAccessLayer.UnitOfWork;
@@ -14,10 +15,13 @@ namespace BusinessLogicLayer.Services.Implementations
     public class GroomingServiceService : IGroomingServiceService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public GroomingServiceService(IUnitOfWork unitOfWork)
+        public GroomingServiceService(IUnitOfWork unitOfWork,IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
+
         }
 
         public async Task<GroomingService> GetGroomingServiceById(int groomingServiceId)
@@ -30,12 +34,7 @@ namespace BusinessLogicLayer.Services.Implementations
 
         public async Task AddGroomingService(GroomingServiceWithoutIdDTO groomingServiceWithoutIdDTO)
         {
-            var groomingService = new GroomingService
-            {
-                Name = groomingServiceWithoutIdDTO.Name,
-                Description = groomingServiceWithoutIdDTO.Description,
-                Price = groomingServiceWithoutIdDTO.Price
-            };
+            var groomingService = _mapper.Map<GroomingService>(groomingServiceWithoutIdDTO);
 
             await _unitOfWork.GroomingServices.Add(groomingService);
             await _unitOfWork.SaveChangesAsync();
@@ -43,15 +42,7 @@ namespace BusinessLogicLayer.Services.Implementations
 
         public async Task<List<GroomingServiceDTO>> GetAllGroomingServices()
         {
-            var services = await _unitOfWork.GroomingServices.GetAll();
-            var dtoList = services.Select(s => new GroomingServiceDTO
-            {
-                Id = s.Id,
-                Name = s.Name,
-                Description = s.Description,
-                Price = s.Price
-            }).ToList();
-            return dtoList;
+            return await _unitOfWork.GroomingServices.GetAllGroomingServices();
         }
 
         public async Task UpdateGroomingService(GroomingServiceDTO groomingServiceDTO)

@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using DataAccessLayer.Context;
 using DataAccessLayer.Repositories.Interfaces;
+using DomainLayer.DTOs.GroomingServiceDTOs;
 using DomainLayer.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer.Repositories.Implementations
 {
@@ -13,6 +15,18 @@ namespace DataAccessLayer.Repositories.Implementations
     {
         public GroomingServiceRepository(PuppyParadiseContext puppyParadiseContext) : base(puppyParadiseContext)
         {
+        }
+
+        public async Task<List<GroomingServiceDTO>> GetAllGroomingServices()
+        {
+            return await _puppyParadiseContext.GroomingServices
+                .Select(s => new GroomingServiceDTO()
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Description = s.Description,
+                    Price = s.Price,
+                }).ToListAsync();
         }
     }
 }
