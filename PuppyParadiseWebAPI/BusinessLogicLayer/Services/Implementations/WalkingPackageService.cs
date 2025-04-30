@@ -42,15 +42,7 @@ namespace BusinessLogicLayer.Services.Implementations
 
         public async Task<List<WalkingPackageDTO>> GetAllWalkingPackages()
         {
-            var packages = await _unitOfWork.WalkingPackages.GetAll();
-            var dtoList = packages.Select(s => new WalkingPackageDTO
-            {
-                Id = s.Id,
-                Name = s.Name,
-                Description = s.Description,
-                Price = s.Price
-            }).ToList();
-            return dtoList;
+            return await _unitOfWork.WalkingPackages.GetAllWalkingPackage();
         }
 
         public async Task<WalkingPackage> GetWalkingPackageById(int walkingPackageId)
