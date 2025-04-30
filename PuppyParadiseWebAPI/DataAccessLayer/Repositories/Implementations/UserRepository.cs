@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using DataAccessLayer.Context;
 using DataAccessLayer.Repositories.Interfaces;
 using DomainLayer.DTOs.UserDTOs;
+using DomainLayer.Helpers;
 using DomainLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -50,5 +51,47 @@ namespace DataAccessLayer.Repositories.Implementations
                 .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
             return user;
         }
+
+        public async Task<PagedResult<UserDTO>> GetUsersPerPageAsync(UserFilterDTO usersFilter)
+        {
+            var query = _puppyParadiseContext.Users
+                .Include(u => u.Role)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(usersFilter.Search))
+            {
+                var words = usersFilter.Search.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                query = query.Where(u =>
+                    words.All(word =>
+                        u.Name.ToLower().Contains(word.ToLower()) ||
+                        u.Surname.ToLower().Contains(word.ToLower()) ||
+                        u.PhoneNumber.ToLower().Contains(word.ToLower()) ||
+                        u.Email.ToLower().Contains(word.ToLower())
+                    )
+                );
+            }
+
+            if (usersFilter.RoleId.HasValue)
+            {
+                query = query.Where(u => u.RoleId == usersFilter.RoleId.Value);
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var users = await query
+                .Skip((usersFilter.Page - 1) * usersFilter.PageSize)
+                .Take(usersFilter.PageSize)
+                .ToListAsync();
+
+            return new PagedResult<UserDTO>
+            {
+                Items = _mapper.Map<List<UserDTO>>(users),
+                TotalCount = totalCount,
+                Page = usersFilter.Page,
+                PageSize = usersFilter.PageSize
+            };
+        }
+
     }
 }

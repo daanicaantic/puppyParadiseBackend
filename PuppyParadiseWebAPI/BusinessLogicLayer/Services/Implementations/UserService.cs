@@ -7,6 +7,7 @@ using DataAccessLayer.Repositories.Interfaces;
 using DataAccessLayer.UnitOfWork;
 using DomainLayer.Constants;
 using DomainLayer.DTOs.UserDTOs;
+using DomainLayer.Helpers;
 using DomainLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -99,6 +100,13 @@ namespace BusinessLogicLayer.Services.Implementations
 
             _unitOfWork.Users.Delete(user);
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<PagedResult<UserDTO>> GetUsersPerPage(UserFilterDTO usersFilter)
+        {
+            var pagedResult = await _unitOfWork.Users.GetUsersPerPageAsync(usersFilter);
+
+            return pagedResult;
         }
     }
 }
