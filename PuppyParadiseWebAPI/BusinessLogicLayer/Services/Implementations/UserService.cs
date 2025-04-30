@@ -29,11 +29,19 @@ namespace BusinessLogicLayer.Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task AddUser(UserDTO userDTO)
+        public async Task AddUser(AddUserDTO userDTO)
         {
             var role = await _unitOfWork.Roles.GetById(userDTO.RoleId);
             if (role == null)
                 throw new Exception("Role not found!");
+
+            var email = await _unitOfWork.Users.GetUserByEmail(userDTO.Email);
+            if (email != null)
+                throw new Exception(UserExceptionsConstants.UserWithGivenEmailAlreadyExists);
+
+            var number = await _unitOfWork.Users.GetUserByPhoneNumber(userDTO.PhoneNumber);
+            if (number != null)
+                throw new Exception(UserExceptionsConstants.UserWithGivenPhoneNumberAlreadyExists);
 
             /*var user = new User
              {
@@ -49,16 +57,39 @@ namespace BusinessLogicLayer.Services.Implementations
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<UserDTO> GetUserById(int id)
+        public async Task<GetUserDTO> GetUserById(int id)
         {
-            var user = await _unitOfWork.Users.GetUser(id);
+            var user = await _unitOfWork.Users.GetUserById(id);
             if (user == null)
                 throw new Exception(UserExceptionsConstants.UserWithGivenIdNotFound);
 
-            //var u = new UserDTO(user.Name, user.Surname, user.Email, user.PhoneNumber, user.RoleId, user.Role.Name);
-            var us = _mapper.Map<UserDTO>(user);
+            //var u = new GetUserDTO(user.Name, user.Surname, user.Email, user.PhoneNumber, user.RoleId, user.RoleName);
+            var u = _mapper.Map<GetUserDTO>(user);
+            return u;
+        }
 
-            return us;
+        public async Task<User> GetUserByEmail(string email)
+        {
+            var user = await _unitOfWork.Users.GetUserByEmail(email);
+            if (user == null)
+                throw new Exception(UserExceptionsConstants.UserWithGivenEmailNotFound);
+            return user;
+        }
+
+        public async Task<User> GetUserByPhoneNumber(string phoneNumber)
+        {
+            var user = await _unitOfWork.Users.GetUserByPhoneNumber(phoneNumber);
+            if (user == null)
+                throw new Exception(UserExceptionsConstants.UserWithGivenPhoneNumberNotFound);
+            return user;
+        }
+
+        public async Task<User?> GetUserByCredentialsAsync(string email, string password)
+        {
+            var user = await _unitOfWork.Users.GetUserByCredentialsAsync(email, password);
+            if (user == null)
+                throw new Exception(UserExceptionsConstants.UserWithGivenCredentialsNotFound);
+            return user;
         }
 
         public async Task DeleteUser(int id)
@@ -66,32 +97,9 @@ namespace BusinessLogicLayer.Services.Implementations
             var user = await _unitOfWork.Users.GetById(id);
             if (user == null)
                 throw new Exception(UserExceptionsConstants.UserWithGivenIdNotFound);
+
             _unitOfWork.Users.Delete(user);
             await _unitOfWork.SaveChangesAsync();
-        }
-
-        public async Task<UserDTO> GetUserByEmail(string email)
-        {
-            var user = await _unitOfWork.Users.GetByEmail(email);
-            if (user == null)
-                throw new Exception("User with this email doesn't exist.");
-            return user;
-        }
-
-        public async Task<User> GetUserByPhoneNumber(string phoneNumber)
-        {
-            var user = await _unitOfWork.Users.GetByPhoneNumber(phoneNumber);
-            if (user == null)
-                throw new Exception("User with this phone number doesn't exist.");
-            return user;
-        }
-
-        public async Task<User?> GetByCredentialsAsync(string email, string password)
-        {
-            var user = await _unitOfWork.Users.GetByCredentialsAsync(email, password);
-            if (user == null)
-                throw new Exception("User with this email and password doesn't exist.");
-            return user;
         }
 
         public async Task<PagedResult<UserDTO>> GetUsersPerPage(UserFilterDTO usersFilter)

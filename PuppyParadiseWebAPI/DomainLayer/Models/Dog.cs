@@ -17,6 +17,7 @@ namespace DomainLayer.Models
         public double Weight { get; set; }
 
         public int DogSizeId { get; set; }
+
         public DogSize DogSize { get; set; }
 
         public int OwnerId { get; set; }

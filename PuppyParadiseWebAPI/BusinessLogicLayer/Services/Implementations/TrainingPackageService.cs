@@ -36,18 +36,20 @@ namespace BusinessLogicLayer.Services.Implementations
         public async Task<List<TrainingPackage>> GetAllTrainingPackages()
         {
             var packages = await _unitOfWork.TrainingPackages.GetAll();
-            if (packages == null)
-                throw new Exception(TrainingPackageExceptionsConstants.TrainingPackageListNotFound);
+            
             return packages;
         }
 
         public async Task UpdateTrainingPackage(TrainingPackage trainingPackage)
         {
-            var tpForEdit = await _unitOfWork.TrainingPackages.GetById(trainingPackage.Id);
-            if (tpForEdit == null)
-                throw new Exception(TrainingPackageExceptionsConstants.TrainingPackageWithGivenIdNotFound);
+            var tpForEdit = await GetTrainingPackageById(trainingPackage.Id);
 
-            _unitOfWork.TrainingPackages.UpdateTrainingPackage(tpForEdit, trainingPackage);
+            tpForEdit.Name = trainingPackage.Name;
+            tpForEdit.Description = trainingPackage.Description;
+            tpForEdit.DurationInWeeks = trainingPackage.DurationInWeeks;
+            tpForEdit.SessionsPerWeek = trainingPackage.SessionsPerWeek;
+            tpForEdit.SessionDuration = trainingPackage.SessionDuration;
+            tpForEdit.Price = trainingPackage.Price;
 
             _unitOfWork.TrainingPackages.Update(tpForEdit);
 
@@ -56,9 +58,7 @@ namespace BusinessLogicLayer.Services.Implementations
 
         public async Task DeleteTrainingPackage(int trainingPackageId)
         {
-            var trainingPackage = await _unitOfWork.TrainingPackages.GetById(trainingPackageId);
-            if (trainingPackage == null)
-                throw new Exception(TrainingPackageExceptionsConstants.TrainingPackageWithGivenIdNotFound);
+            var trainingPackage = await GetTrainingPackageById(trainingPackageId);
 
             _unitOfWork.TrainingPackages.Delete(trainingPackage);
 

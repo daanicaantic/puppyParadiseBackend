@@ -37,18 +37,17 @@ namespace BusinessLogicLayer.Services.Implementations
         public async Task<List<GroomingPackage>> GetAllGroomingPackages()
         {
             var packages = await _unitOfWork.GroomingPackages.GetAll();
-            if(packages == null)
-                throw new Exception(GroomingPackageExceptionsConstants.GroomingPackageListNotFound);
+            
             return packages;
         }
 
         public async Task UpdateGroomingPackage(GroomingPackage groomingPackage)
         {
-            var gpForEdit = await _unitOfWork.GroomingPackages.GetById(groomingPackage.Id);
-            if (gpForEdit == null)
-                throw new Exception(GroomingPackageExceptionsConstants.GroomingPackageWithGivenIdNotFound);
+            var gpForEdit = await GetGroomingPackageById(groomingPackage.Id);
 
-            _unitOfWork.GroomingPackages.UpdateGroomingPackage(gpForEdit, groomingPackage);
+            gpForEdit.Name = groomingPackage.Name;
+            gpForEdit.Price = groomingPackage.Price;
+            gpForEdit.Description = groomingPackage.Description;
 
             _unitOfWork.GroomingPackages.Update(gpForEdit);
 
@@ -57,9 +56,7 @@ namespace BusinessLogicLayer.Services.Implementations
 
         public async Task DeleteGroomingPackage(int groomingPackageId)
         {
-            var groomingPackage = await _unitOfWork.GroomingPackages.GetById(groomingPackageId);
-            if (groomingPackage == null)
-                throw new Exception(GroomingPackageExceptionsConstants.GroomingPackageWithGivenIdNotFound);
+            var groomingPackage = await GetGroomingPackageById(groomingPackageId);
 
             _unitOfWork.GroomingPackages.Delete(groomingPackage);
 
