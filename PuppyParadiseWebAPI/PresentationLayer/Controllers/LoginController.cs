@@ -26,7 +26,7 @@ namespace PresentationLayer.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
         {
-            var user = await _userService.GetByCredentialsAsync(request.Email, request.Password);
+            var user = await _userService.GetUserByCredentialsAsync(request.Email, request.Password);
             if (user == null)
                 return Unauthorized("Invalid email or password.");
 

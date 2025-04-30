@@ -9,12 +9,12 @@ using DomainLayer.Models;
 
 namespace DomainLayer.Profiles.UserProfiles
 {
-    public class UserProfile : Profile
+    public class GetUserProfile : Profile
     {
-        public UserProfile()
+        public GetUserProfile()
         {
-            CreateMap<User, UserDTO>()
-            .ReverseMap();
+            CreateMap<User, GetUserDTO>()
+            .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.Name));
         }
     }
 }

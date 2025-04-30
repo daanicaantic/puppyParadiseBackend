@@ -10,16 +10,16 @@ namespace BusinessLogicLayer.Services.Interfaces
 {
     public interface IUserService
     {
-        Task AddUser(UserDTO user);
+        Task AddUser(AddUserDTO user);
 
-        Task<UserDTO> GetUserById(int id);
+        Task<GetUserDTO> GetUserById(int id);
 
-        Task DeleteUser(int id);
-
-        Task<UserDTO> GetUserByEmail (string email);
+        Task<User> GetUserByEmail(string email);
 
         Task<User> GetUserByPhoneNumber(string phoneNumber);
 
-        Task<User?> GetByCredentialsAsync(string email, string password);
+        Task<User?> GetUserByCredentialsAsync(string email, string password);
+
+        Task DeleteUser(int id);
     }
 }

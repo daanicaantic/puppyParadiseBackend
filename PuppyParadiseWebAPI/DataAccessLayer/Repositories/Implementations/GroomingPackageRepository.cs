@@ -15,14 +15,6 @@ namespace DataAccessLayer.Repositories.Implementations
     {
         public GroomingPackageRepository(PuppyParadiseContext puppyParadiseContext) : base(puppyParadiseContext)
         {
-
-        }
-
-        public void UpdateGroomingPackage(GroomingPackage gpOld, GroomingPackage gpNew)
-        {
-            gpOld.Name = gpNew.Name;
-            gpOld.Price = gpNew.Price;
-            gpOld.Description = gpNew.Description;
         }
     }
 }

@@ -9,12 +9,11 @@ using DomainLayer.Models;
 
 namespace DomainLayer.Profiles.UserProfiles
 {
-    public class UserProfile : Profile
+    public class AddUserProfile : Profile
     {
-        public UserProfile()
+        public AddUserProfile()
         {
-            CreateMap<User, UserDTO>()
-            .ReverseMap();
+            CreateMap<AddUserDTO, User>();
         }
     }
 }
