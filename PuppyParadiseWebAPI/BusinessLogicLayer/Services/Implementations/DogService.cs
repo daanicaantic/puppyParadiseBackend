@@ -12,16 +12,19 @@ using DomainLayer.DTOs.DogDTOs;
 using DomainLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using AutoMapper;
 
 namespace BusinessLogicLayer.Services.Implementations
 {
     public class DogService : IDogService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public DogService(IUnitOfWork unitOfWork)
+        public DogService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task SetDogSize(Dog dog)
@@ -41,13 +44,7 @@ namespace BusinessLogicLayer.Services.Implementations
             if (owner == null)
                 throw new Exception(UserExceptionsConstants.UserWithGivenIdNotFound);
 
-            var dog = new Dog
-            {
-                Name = dogDTO.Name,
-                Breed = dogDTO.Breed,
-                Weight = dogDTO.Weight,
-                OwnerId = dogDTO.OwnerId,
-            };
+            var dog = _mapper.Map<Dog>(dogDTO);
             await SetDogSize(dog);
             await _unitOfWork.Dogs.Add(dog);
             await _unitOfWork.SaveChangesAsync();
@@ -59,35 +56,14 @@ namespace BusinessLogicLayer.Services.Implementations
             if(dog == null)
                 throw new Exception(DogExceptionsConstants.DogWithGivenIdNotFound);
 
-            var dogDTO = new DogDTO
-            {
-                Id = dog.Id,
-                Name = dog.Name,
-                Breed = dog.Breed,
-                Weight = dog.Weight,
-                DogSize = dog.DogSize.Name,
-                OwnerName = dog.Owner.Name,
-                OwnerSurname = dog.Owner.Surname
-            };
-
-            return dogDTO;
+            return _mapper.Map<DogDTO>(dog);
         }
 
         public async Task<List<DogDTO>> GetDogsByOwnerId(int ownerId)
         {
             var dogs = await _unitOfWork.Dogs.GetDogsByOwnerId(ownerId);
 
-            return dogs.Select(dog => new DogDTO
-            {
-                Id = dog.Id,
-                Name = dog.Name,
-                Breed = dog.Breed,
-                Weight = dog.Weight,
-                DogSize = dog.DogSize.Name,
-                OwnerName = dog.Owner.Name,
-                OwnerSurname = dog.Owner.Surname,
-
-            }).ToList();   
+            return _mapper.Map<List<DogDTO>>(dogs);
         }
 
     }
