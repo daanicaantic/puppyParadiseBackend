@@ -61,5 +61,36 @@ namespace PresentationLayer.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Route("UpdateDog")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateDog([FromBody] UpdateDogDTO dogUpdateDTO)
+        {
+            try
+            {
+                await _dogService.UpdateDog(dogUpdateDTO);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Route("DeleteDog/{id}")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteDog(int id)
+        {
+            try
+            {
+                await _dogService.DeleteDog(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
     }
 }

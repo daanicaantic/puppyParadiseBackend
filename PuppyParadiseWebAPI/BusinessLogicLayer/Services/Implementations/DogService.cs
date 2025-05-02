@@ -66,5 +66,28 @@ namespace BusinessLogicLayer.Services.Implementations
             return _mapper.Map<List<DogDTO>>(dogs);
         }
 
+        public async Task UpdateDog(UpdateDogDTO dogUpdateDTO)
+        {
+            var dog = await _unitOfWork.Dogs.GetDogById(dogUpdateDTO.Id);
+            if (dog == null)
+                throw new Exception(DogExceptionsConstants.DogWithGivenIdNotFound);
+
+            _mapper.Map(dogUpdateDTO, dog);
+
+            await SetDogSize(dog); 
+
+            _unitOfWork.Dogs.Update(dog); 
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task DeleteDog(int id)
+        {
+            var dog = await _unitOfWork.Dogs.GetDogById(id);
+            if (dog == null)
+                throw new Exception(DogExceptionsConstants.DogWithGivenIdNotFound);
+
+            _unitOfWork.Dogs.Delete(dog);
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
 }

@@ -17,5 +17,9 @@ namespace BusinessLogicLayer.Services.Interfaces
         Task<DogDTO> GetDogById(int id);
 
         Task<List<DogDTO>> GetDogsByOwnerId(int ownerId);
+
+        Task UpdateDog(UpdateDogDTO dog);
+
+        Task DeleteDog(int id);
     }
 }
