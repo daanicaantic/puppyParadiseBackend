@@ -12,6 +12,7 @@ namespace DataAccessLayer.UnitOfWork
         IUserRepository Users { get; }
         IRoleRepository Roles { get; }
         IDogRepository Dogs { get; }
+        IDogSizeRepository DogSizes { get; }
         IGroomingPackageRepository GroomingPackages { get; }
         IGroomingServiceRepository GroomingServices { get; }
         IGroomingServiceAppointmentRepository GroomingServiceAppointments { get; }
