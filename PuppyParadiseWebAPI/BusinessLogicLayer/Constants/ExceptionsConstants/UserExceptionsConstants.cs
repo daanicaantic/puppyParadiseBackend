@@ -14,6 +14,6 @@ namespace BusinessLogicLayer.Constants.ExceptionsConstants
         public const string UserWithGivenEmailAlreadyExists = "User with this email already exists.";
         public const string UserWithGivenPhoneNumberAlreadyExists = "User with this phone number already exists.";
         public const string UserWithGivenCredentialsNotFound = "User with this email and password doesn't exist.";
-
+        public const string UsersPasswordIsNotCorrect = "Users password is not correct.";
     }
 }

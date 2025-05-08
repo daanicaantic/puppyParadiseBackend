@@ -6,8 +6,10 @@ using DataAccessLayer.Extensions;
 using DataAccessLayer.Repositories.Implementations;
 using DataAccessLayer.Repositories.Interfaces;
 using DataAccessLayer.UnitOfWork;
+using DomainLayer.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PresentationLayer.Extensions;
@@ -15,6 +17,8 @@ using System;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 builder.Services.AddBLLServices(builder.Configuration);
 
@@ -24,6 +28,8 @@ var jwtSettings = builder.Configuration.GetSection("Jwt");
 
 // Add authentication services
 builder.Services.AddJwtAuthentication(builder.Configuration);
+
+builder.Services.ConfigureSwaggerAuth();
 
 builder.Services.AddAuthorization();
 

@@ -22,16 +22,24 @@ namespace PresentationLayer.Controllers
             _userService = userService;
         }
 
-        [Route("Login")]
+        [Route("LogIn")]
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
+        public async Task<IActionResult> LogIn([FromBody] LoginRequestDTO request)
         {
-            var user = await _userService.GetUserByCredentialsAsync(request.Email, request.Password);
-            if (user == null)
-                return Unauthorized("Invalid email or password.");
+            try
+            {
+                var user = await _loginService.LogInAsync(request);
+                if (user == null)
+                    return Unauthorized("Invalid email or password.");
 
-            var token = _loginService.GenerateToken(user);
-            return Ok(new LoginResponseDTO { Token = token });
+                var token = _loginService.GenerateToken(user);
+
+                return Ok(new LoginResponseDTO { Token = token });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

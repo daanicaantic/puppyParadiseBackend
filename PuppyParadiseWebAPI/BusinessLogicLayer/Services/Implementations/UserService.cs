@@ -9,6 +9,7 @@ using DomainLayer.Constants;
 using DomainLayer.DTOs.UserDTOs;
 using DomainLayer.Helpers;
 using DomainLayer.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -22,11 +23,13 @@ namespace BusinessLogicLayer.Services.Implementations
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IPasswordHasher<User> _passwordHasher;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper) 
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IPasswordHasher<User> passwordHasher) 
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task AddUser(AddUserDTO userDTO)
@@ -52,6 +55,7 @@ namespace BusinessLogicLayer.Services.Implementations
                  RoleId = userDTO.RoleId,
              };*/
             var user = _mapper.Map<User>(userDTO);
+            user.Password = _passwordHasher.HashPassword(user, userDTO.Password);
 
             await _unitOfWork.Users.Add(user);
             await _unitOfWork.SaveChangesAsync();
@@ -68,28 +72,24 @@ namespace BusinessLogicLayer.Services.Implementations
             return u;
         }
 
-        public async Task<User> GetUserByEmail(string email)
+        public async Task<GetUserDTO> GetUserByEmail(string email)
         {
             var user = await _unitOfWork.Users.GetUserByEmail(email);
             if (user == null)
                 throw new Exception(UserExceptionsConstants.UserWithGivenEmailNotFound);
-            return user;
+
+            var u = _mapper.Map<GetUserDTO>(user);
+            return u;
         }
 
-        public async Task<User> GetUserByPhoneNumber(string phoneNumber)
+        public async Task<GetUserDTO> GetUserByPhoneNumber(string phoneNumber)
         {
             var user = await _unitOfWork.Users.GetUserByPhoneNumber(phoneNumber);
             if (user == null)
                 throw new Exception(UserExceptionsConstants.UserWithGivenPhoneNumberNotFound);
-            return user;
-        }
 
-        public async Task<User?> GetUserByCredentialsAsync(string email, string password)
-        {
-            var user = await _unitOfWork.Users.GetUserByCredentialsAsync(email, password);
-            if (user == null)
-                throw new Exception(UserExceptionsConstants.UserWithGivenCredentialsNotFound);
-            return user;
+            var u = _mapper.Map<GetUserDTO>(user);
+            return u;
         }
 
         public async Task DeleteUser(int id)
@@ -102,11 +102,44 @@ namespace BusinessLogicLayer.Services.Implementations
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<PagedResult<UserDTO>> GetUsersPerPage(UserFilterDTO usersFilter)
+        public async Task<PagedResult<GetUserDTO>> GetUsersPerPage(UserFilterDTO usersFilter)
         {
             var pagedResult = await _unitOfWork.Users.GetUsersPerPageAsync(usersFilter);
 
             return pagedResult;
+        }
+
+        public async Task UpdateUserInfo(UpdateUserInfoDTO updateUserInfoDTO)
+        {
+            var user = await _unitOfWork.Users.GetById(updateUserInfoDTO.Id);
+            if (user == null)
+                throw new Exception(UserExceptionsConstants.UserWithGivenIdNotFound);
+
+            user.Name = updateUserInfoDTO.Name;
+            user.Surname = updateUserInfoDTO.Surname;
+            user.Email = updateUserInfoDTO.Email;
+            user.PhoneNumber = updateUserInfoDTO.PhoneNumber;
+
+            _unitOfWork.Users.Update(user);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task UpdateUserPassword(UpdateUserPasswordDTO updateUserPasswordDTO)
+        {
+            var user = await _unitOfWork.Users.GetById(updateUserPasswordDTO.Id);
+            if (user == null)
+                throw new Exception(UserExceptionsConstants.UserWithGivenIdNotFound);
+
+            if (!string.IsNullOrEmpty(updateUserPasswordDTO.NewPassword) || !string.IsNullOrEmpty(updateUserPasswordDTO.ConfirmPassword))
+            {
+                if (updateUserPasswordDTO.NewPassword != updateUserPasswordDTO.ConfirmPassword)
+                    throw new ArgumentException("New password and confirm password do not match.");
+
+                user.Password = _passwordHasher.HashPassword(user, updateUserPasswordDTO.NewPassword);
+            }
+
+            _unitOfWork.Users.Update(user);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }
