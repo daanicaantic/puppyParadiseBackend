@@ -60,7 +60,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AppointmentGroomings");
+                    b.ToTable("AppointmentGroomings", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.AppointmentSitting", b =>
@@ -111,7 +111,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AppointmentSittings");
+                    b.ToTable("AppointmentSittings", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.AppointmentTraining", b =>
@@ -150,7 +150,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AppointmentTrainings");
+                    b.ToTable("AppointmentTrainings", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.AppointmentWalking", b =>
@@ -203,7 +203,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("WalkingPackageId");
 
-                    b.ToTable("AppointmentWalkings");
+                    b.ToTable("AppointmentWalkings", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Dog", b =>
@@ -237,7 +237,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Dogs");
+                    b.ToTable("Dogs", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.DogSize", b =>
@@ -260,7 +260,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DogSizes");
+                    b.ToTable("DogSizes", (string)null);
 
                     b.HasData(
                         new
@@ -307,7 +307,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GroomingPackages");
+                    b.ToTable("GroomingPackages", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.GroomingService", b =>
@@ -331,7 +331,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GroomingServices");
+                    b.ToTable("GroomingServices", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.GroomingServiceAppointment", b =>
@@ -354,7 +354,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("GroomingServiceId");
 
-                    b.ToTable("GroomingServiceAppointments");
+                    b.ToTable("GroomingServiceAppointments", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Role", b =>
@@ -371,7 +371,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
 
                     b.HasData(
                         new
@@ -405,7 +405,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ServiceTypes");
+                    b.ToTable("ServiceTypes", (string)null);
 
                     b.HasData(
                         new
@@ -447,7 +447,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SittingPackages");
+                    b.ToTable("SittingPackages", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.TrainingPackage", b =>
@@ -480,7 +480,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TrainingPackages");
+                    b.ToTable("TrainingPackages", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.User", b =>
@@ -518,7 +518,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.WalkingPackage", b =>
@@ -542,7 +542,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WalkingPackages");
+                    b.ToTable("WalkingPackages", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.AppointmentGrooming", b =>

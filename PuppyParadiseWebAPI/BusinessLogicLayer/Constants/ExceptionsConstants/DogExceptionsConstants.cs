@@ -10,5 +10,6 @@ namespace BusinessLogicLayer.Constants.ExceptionsConstants
     {
         public const string DogWithGivenIdNotFound = "Dog with this ID doesn't exist.";
         public const string DogWithGivenWeightNotFound = "Dog with this weight doesn't exist.";
+        public const string UnknownDogSize = "Unknown dog size.";
     }
 }

@@ -15,6 +15,6 @@ namespace DomainLayer.Models
 
         public int GroomingServiceId { get; set; }
 
-        public GroomingService GromingService { get; set; } 
+        public GroomingService GroomingService { get; set; } 
     }
 }

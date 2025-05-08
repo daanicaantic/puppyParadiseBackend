@@ -12,5 +12,7 @@ namespace DataAccessLayer.Repositories.Interfaces
     {
 
         Task<List<GroomingServiceDTO>> GetAllGroomingServices();
+
+        Task<List<GroomingService>> GetAllGroomingServicesByIds(List<int> ids);
     }
 }
