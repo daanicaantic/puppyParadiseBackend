@@ -28,5 +28,12 @@ namespace DataAccessLayer.Repositories.Implementations
                     Price = s.Price,
                 }).ToListAsync();
         }
+
+        public async Task<List<GroomingService>> GetAllGroomingServicesByIds(List<int> ids)
+        {
+            return await _puppyParadiseContext.GroomingServices
+                                 .Where(gs => ids.Contains(gs.Id))
+                                 .ToListAsync();
+        }
     }
 }

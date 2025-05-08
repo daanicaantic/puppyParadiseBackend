@@ -16,6 +16,8 @@ namespace BusinessLogicLayer.Services.Interfaces
 
         Task<List<GroomingServiceDTO>> GetAllGroomingServices();
 
+        Task<List<GroomingService>> GetAllGroomingServicesByIds(List<int> ids);
+
         Task UpdateGroomingService(GroomingServiceDTO groomingServiceDTO);
 
         Task DeleteGroomingService(int groomingServiceId);

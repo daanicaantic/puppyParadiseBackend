@@ -45,6 +45,12 @@ namespace BusinessLogicLayer.Services.Implementations
             return await _unitOfWork.GroomingServices.GetAllGroomingServices();
         }
 
+        public async Task<List<GroomingService>> GetAllGroomingServicesByIds(List<int> ids)
+        {
+            return await _unitOfWork.GroomingServices.GetAllGroomingServicesByIds(ids);
+        }
+
+
         public async Task UpdateGroomingService(GroomingServiceDTO groomingServiceDTO)
         {
             var gsForEdit = await GetGroomingServiceById(groomingServiceDTO.Id);
@@ -64,6 +70,5 @@ namespace BusinessLogicLayer.Services.Implementations
             _unitOfWork.GroomingServices.Delete(groomingService);
             await _unitOfWork.SaveChangesAsync();
         }
-
     }
 }
