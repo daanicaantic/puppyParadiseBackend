@@ -5,9 +5,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessLogicLayer.Constants.ExceptionsConstants;
 using BusinessLogicLayer.Services.Interfaces;
 using DataAccessLayer.UnitOfWork;
+using DomainLayer.DTOs.UserDTOs;
 using DomainLayer.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -19,10 +22,13 @@ namespace BusinessLogicLayer.Services.Implementations
 
         private readonly IUnitOfWork _unitOfWork;
 
-        public LoginService(IConfiguration config, IUnitOfWork unitOfWork)
+        private readonly IPasswordHasher<User> _passwordHasher;
+
+        public LoginService(IConfiguration config, IUnitOfWork unitOfWork, IPasswordHasher<User> passwordHasher)
         {
             _config = config;
             _unitOfWork = unitOfWork;
+            _passwordHasher = passwordHasher;
         }
 
         public string GenerateToken(User user)
@@ -47,6 +53,21 @@ namespace BusinessLogicLayer.Services.Implementations
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<User?> LogInAsync(LoginRequestDTO loginRequest)
+        {
+            var user = await _unitOfWork.Users.GetUserByEmail(loginRequest.Email);
+
+            if (user == null)
+                throw new Exception(UserExceptionsConstants.UserWithGivenEmailNotFound);
+
+            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, loginRequest.Password);
+
+            if (result != PasswordVerificationResult.Success)
+                throw new Exception(UserExceptionsConstants.UsersPasswordIsNotCorrect);
+
+            return user;
         }
     }
 }

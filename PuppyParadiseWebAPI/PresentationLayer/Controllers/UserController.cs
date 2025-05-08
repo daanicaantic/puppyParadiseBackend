@@ -114,5 +114,35 @@ namespace PresentationLayer.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [Route("UpdateUserInfo")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateUserInfo([FromBody] UpdateUserInfoDTO updateUserInfoDTO)
+        {
+            try
+            {
+                await _userService.UpdateUserInfo(updateUserInfoDTO);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Route("UpdateUserPassword")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateUserPassword([FromBody] UpdateUserPasswordDTO updateUserPasswordDTO)
+        {
+            try
+            {
+                await _userService.UpdateUserPassword(updateUserPasswordDTO);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

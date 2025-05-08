@@ -13,19 +13,5 @@ namespace DomainLayer.DTOs.UserDTOs
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public int RoleId { get; set; }
-
-        public UserDTO()
-        {
-
-        }
-
-        public UserDTO(string name, string surname, string email, string phoneNumber, int roleId)
-        {
-            Name = name;
-            Surname = surname;
-            Email = email;
-            PhoneNumber = phoneNumber;
-            RoleId = roleId;
-        }
     }
 }
