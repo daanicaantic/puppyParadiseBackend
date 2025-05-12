@@ -13,7 +13,7 @@ namespace DomainLayer.Profiles.DogProfiles
     {
         public DogProfile() 
         {
-            CreateMap<Dog, DogDTO>()
+            CreateMap<Dog, GetDogDTO>()
                 .ForMember(dest => dest.DogSize, opt => opt.MapFrom(src => src.DogSize.Name))
                 .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Name))
                 .ForMember(dest => dest.OwnerSurname, opt => opt.MapFrom(src => src.Owner.Surname));

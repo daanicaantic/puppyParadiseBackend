@@ -4,12 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DomainLayer.DTOs.WalkingPackageDTOs
+namespace DomainLayer.DTOs.GroomingPackageDTOs
 {
-    public class WalkingPackageWithoutIdDTO
+    public class UpdateGroomingPackageDTO
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
+
         public string Description { get; set; }
+
         public double Price { get; set; }
     }
 }

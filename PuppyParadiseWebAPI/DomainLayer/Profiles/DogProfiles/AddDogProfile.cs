@@ -13,7 +13,7 @@ namespace DomainLayer.Profiles.DogProfiles
     {
         public AddDogProfile()
         {
-            CreateMap<DogWithoutIdDTO, Dog>();
+            CreateMap<AddDogDTO, Dog>();
         }
     }
 }

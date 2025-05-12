@@ -11,6 +11,6 @@ namespace DataAccessLayer.Repositories.Interfaces
 {
     public interface IWalkingPackageRepository : IRepository<WalkingPackage>
     {
-        Task<List<WalkingPackageDTO>> GetAllWalkingPackage();
+        Task<List<GetWalkingPackageDTO>> GetAllWalkingPackage();
     }
 }

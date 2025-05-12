@@ -9,8 +9,18 @@ namespace BusinessLogicLayer.Services.Interfaces
 {
     public interface IAppointmentGroomingService
     {
-        Task<GetAppointmentGroomingDTO> AddAppointmentGrooming(AddAppointmentGroomingDTO dto, int userId);
+        Task AddAppointmentGrooming(AddAppointmentGroomingDTO dto, int userId);
 
-        Task<GetAppointmentGroomingDTO> UpdateAppointmentStatus(int appointmentId, string newStatus);
+        Task UpdateAppointmentGroomingStatus(int appointmentId, string newStatus);
+
+        Task UpdateAppointmentGroomingDateTime(int appointmentId, DateOnly date,TimeOnly time);
+
+        Task UpdateAppointmentGrooming(UpdateAppointmentGroomingDTO dto,int userId);
+
+        Task<GetAppointmentGroomingDTO> GetAppointmentGroomingById(int id);
+
+        Task<List<GetAppointmentGroomingDTO>> GetAllAppointmentGroomings();
+
+        Task DeleteAppointmentGrooming(int appointmentId);
     }
 }

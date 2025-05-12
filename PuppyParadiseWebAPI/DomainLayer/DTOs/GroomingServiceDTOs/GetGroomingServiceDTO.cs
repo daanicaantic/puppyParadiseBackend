@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DomainLayer.DTOs.WalkingPackageDTOs
+namespace DomainLayer.DTOs.GroomingServiceDTOs
 {
-    public class WalkingPackageDTO
+    public class GetGroomingServiceDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.DTOs.DogDTOs
 {
-    public class DogDTO
+    public class GetDogDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }

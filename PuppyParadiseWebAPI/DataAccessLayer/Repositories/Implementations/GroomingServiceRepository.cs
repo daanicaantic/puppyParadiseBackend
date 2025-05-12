@@ -17,10 +17,10 @@ namespace DataAccessLayer.Repositories.Implementations
         {
         }
 
-        public async Task<List<GroomingServiceDTO>> GetAllGroomingServices()
+        public async Task<List<GetGroomingServiceDTO>> GetAllGroomingServices()
         {
             return await _puppyParadiseContext.GroomingServices
-                .Select(s => new GroomingServiceDTO()
+                .Select(s => new GetGroomingServiceDTO()
                 {
                     Id = s.Id,
                     Name = s.Name,

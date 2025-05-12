@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.DTOs.GroomingServiceDTOs
 {
-    public class GroomingServiceWithoutIdDTO
+    public class AddGroomingServiceDTO
     {
         public string Name { get; set; }
         public string Description { get; set; }

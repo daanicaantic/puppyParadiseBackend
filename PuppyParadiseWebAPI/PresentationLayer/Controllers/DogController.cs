@@ -19,7 +19,7 @@ namespace PresentationLayer.Controllers
 
         [Route("AddDog")]
         [HttpPost]
-        public async Task<IActionResult> AddDog([FromBody] DogWithoutIdDTO dogDTO)
+        public async Task<IActionResult> AddDog([FromBody] AddDogDTO dogDTO)
         {
             try
             {

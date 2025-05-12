@@ -20,7 +20,7 @@ namespace BusinessLogicLayer.Services.Implementations
             _unitOfWork = unitOfWork;
         }
 
-        public async Task AddWalkingPackage(WalkingPackageWithoutIdDTO walkingPackageWithoutIdDTO)
+        public async Task AddWalkingPackage(AddWalkingPackageDTO walkingPackageWithoutIdDTO)
         {
             var walkingPackage = new WalkingPackage
             {
@@ -40,7 +40,7 @@ namespace BusinessLogicLayer.Services.Implementations
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<List<WalkingPackageDTO>> GetAllWalkingPackages()
+        public async Task<List<GetWalkingPackageDTO>> GetAllWalkingPackages()
         {
             return await _unitOfWork.WalkingPackages.GetAllWalkingPackage();
         }
@@ -53,7 +53,7 @@ namespace BusinessLogicLayer.Services.Implementations
             return walkingPackage;
         }
 
-        public async Task UpdateWalkingPackage(WalkingPackageDTO walkingPackageDTO)
+        public async Task UpdateWalkingPackage(GetWalkingPackageDTO walkingPackageDTO)
         {
             var wpForEdit = await GetWalkingPackageById(walkingPackageDTO.Id);
 

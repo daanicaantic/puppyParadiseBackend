@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using BusinessLogicLayer.Constants.ExceptionsConstants;
+using BusinessLogicLayer.Helpers;
 using BusinessLogicLayer.Services.Interfaces;
 using DataAccessLayer.UnitOfWork;
 using DomainLayer.Constants;
@@ -19,13 +20,17 @@ namespace BusinessLogicLayer.Services.Implementations
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public AppointmentGroomingService(IUnitOfWork unitOfWork,IMapper mapper)
+        private readonly IGroomingServiceService _groomingServiceService;
+
+        public AppointmentGroomingService(IUnitOfWork unitOfWork,IMapper mapper, 
+            IGroomingServiceService groomingServiceService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _groomingServiceService = groomingServiceService;
         }
 
-        public async Task<GetAppointmentGroomingDTO> AddAppointmentGrooming(AddAppointmentGroomingDTO dto, int userId)
+        public async Task AddAppointmentGrooming(AddAppointmentGroomingDTO dto, int userId)
         {
             var dog = await _unitOfWork.Dogs.GetDogById(dto.DogId);
             if (dog == null)
@@ -38,39 +43,9 @@ namespace BusinessLogicLayer.Services.Implementations
             if (package == null)
                 throw new Exception(GroomingPackageExceptionsConstants.GroomingPackageWithGivenIdNotFound);
 
-            double basePrice = package.Price;
+            double packagePrice = PriceCalculator.CalculatePrice(package.Price,dog.DogSize.Name);
 
-            string size = dog.DogSize.Name.ToLower();
-            switch (size)
-            {
-                case "small":
-                    basePrice *= 0.8;
-                    break;
-                case "large":
-                    basePrice *= 1.2;
-                    break;
-                case "medium":
-                    // Nema promene u ceni za medium
-                    break;
-                default:
-                    throw new Exception(DogExceptionsConstants.UnknownDogSize);
-            }
-
-            double extraServicesPrice = 0;
-            var extraServices = new List<GroomingServiceAppointment>();
-
-            if (dto.ExtraServiceIds != null && dto.ExtraServiceIds.Any())
-            {
-                var services = await _unitOfWork.GroomingServices
-                    .GetAllGroomingServicesByIds(dto.ExtraServiceIds); 
-
-                extraServicesPrice = services.Sum(s => s.Price);
-
-                extraServices = services.Select(s => new GroomingServiceAppointment
-                {
-                    GroomingServiceId = s.Id
-                }).ToList();
-            }
+            var (extraServicesPrice, extraServices) = await _groomingServiceService.CalculateExtraServices(dto.ExtraServiceIds);
 
             var appointment = new AppointmentGrooming
             {
@@ -81,30 +56,105 @@ namespace BusinessLogicLayer.Services.Implementations
                 AppointmentTime = dto.AppointmentTime,
                 ExtraServices = extraServices,
                 Status = ConstStatus.Pending,
-                TotalPrice = basePrice + extraServicesPrice
+                TotalPrice = packagePrice + extraServicesPrice
             };
 
             await _unitOfWork.GroomingAppointments.Add(appointment);
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task UpdateAppointmentGroomingStatus(int appointmentId, string newStatus)
+        {
+            var appointment = await _unitOfWork.GroomingAppointments.GetAppointmentGroomingById(appointmentId);
+            if(appointment==null)
+                  throw new Exception(AppointmentGroomingExceptionsConstants.AppointmentGroomingWithGivenIdNotFound);
+
+            appointment.Status = newStatus;
+            _unitOfWork.GroomingAppointments.Update(appointment);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task UpdateAppointmentGroomingDateTime(int appointmentId, DateOnly date, TimeOnly time)
+        {
+            var appointment = await _unitOfWork.GroomingAppointments.GetAppointmentGroomingById(appointmentId);
+
+            if (appointment == null)
+                throw new Exception(AppointmentGroomingExceptionsConstants.AppointmentGroomingWithGivenIdNotFound);
+
+            appointment.AppointmentDate = date;
+
+            appointment.AppointmentTime = time;
+            _unitOfWork.GroomingAppointments.Update(appointment);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+
+        public async Task<GetAppointmentGroomingDTO> GetAppointmentGroomingById(int id)
+        {
+            var appointment = await _unitOfWork.GroomingAppointments.GetAppointmentGroomingById(id);
+
+            if (appointment == null)
+                throw new Exception(AppointmentGroomingExceptionsConstants.AppointmentGroomingWithGivenIdNotFound);
 
             return _mapper.Map<GetAppointmentGroomingDTO>(appointment);
         }
 
-        public async Task<GetAppointmentGroomingDTO> UpdateAppointmentStatus(int appointmentId, string newStatus)
+        public async Task<List<GetAppointmentGroomingDTO>> GetAllAppointmentGroomings()
         {
-            var appointment = await _unitOfWork.GroomingAppointments.GetById(appointmentId);
-            if (appointment == null)
-                throw new Exception("Appointment not found.");
+            var appointments = await _unitOfWork.GroomingAppointments.GetAllAppointmentGroomings();
+            return _mapper.Map<List<GetAppointmentGroomingDTO>>(appointments);
+        }
 
-            if (newStatus != ConstStatus.Approved && newStatus != ConstStatus.Rejected)
-                throw new Exception("Invalid status.");
+        public async Task DeleteAppointmentGrooming(int appointmentId)
+        {
+            var appointmentGrooming = await _unitOfWork.GroomingAppointments.GetAppointmentGroomingById(appointmentId);
+            if (appointmentGrooming == null)
+                throw new Exception(DogExceptionsConstants.DogWithGivenIdNotFound);
 
-            appointment.Status = newStatus;
-
+            _unitOfWork.GroomingAppointments.Delete(appointmentGrooming);
             await _unitOfWork.SaveChangesAsync();
+        }
 
-            return _mapper.Map<GetAppointmentGroomingDTO>(appointment);
+        public async Task UpdateAppointmentGrooming(UpdateAppointmentGroomingDTO dto,int userId)
+        {
+            var appointmentGrooming = await _unitOfWork.GroomingAppointments.GetAppointmentGroomingById(dto.Id);
+            if (appointmentGrooming == null)
+                throw new Exception(AppointmentGroomingExceptionsConstants.AppointmentGroomingWithGivenIdNotFound);
+
+            var dog = await _unitOfWork.Dogs.GetDogById(dto.DogId);
+            if (dog == null)
+                throw new Exception(DogExceptionsConstants.DogWithGivenIdNotFound);
+
+            if (dog.DogSize == null)
+                throw new Exception(DogExceptionsConstants.UnknownDogSize);
+
+            var package = await _unitOfWork.GroomingPackages.GetById(dto.GroomingPackageId);
+            if (package == null)
+                throw new Exception(GroomingPackageExceptionsConstants.GroomingPackageWithGivenIdNotFound);
+
+            double packagePrice = PriceCalculator.CalculatePrice(package.Price, dog.DogSize.Name);
+
+            var (extraServicesPrice, extraServices) = await _groomingServiceService.CalculateExtraServices(dto.ExtraServiceIds);
+
+            appointmentGrooming.DogId = dto.DogId;
+            appointmentGrooming.AppointmentDate = dto.AppointmentDate;
+            appointmentGrooming.AppointmentTime = dto.AppointmentTime;
+            appointmentGrooming.GroomingPackageId = dto.GroomingPackageId;
+
+            appointmentGrooming.ExtraServices = appointmentGrooming.ExtraServices ?? new List<GroomingServiceAppointment>();
+            
+            appointmentGrooming.ExtraServices.Clear();
+            appointmentGrooming.ExtraServices.AddRange(extraServices);
+            
+
+            appointmentGrooming.TotalPrice = packagePrice + extraServicesPrice;
+
+            appointmentGrooming.Status = ConstStatus.Pending;
+
+            _unitOfWork.GroomingAppointments.Update(appointmentGrooming);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }
+
 

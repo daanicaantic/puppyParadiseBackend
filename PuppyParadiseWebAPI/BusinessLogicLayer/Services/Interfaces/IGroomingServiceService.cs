@@ -12,14 +12,16 @@ namespace BusinessLogicLayer.Services.Interfaces
     {
         Task<GroomingService> GetGroomingServiceById(int groomingServiceId);
 
-        Task AddGroomingService(GroomingServiceWithoutIdDTO groomingServiceWithoutIdDTO);
+        Task AddGroomingService(AddGroomingServiceDTO groomingServiceWithoutIdDTO);
 
-        Task<List<GroomingServiceDTO>> GetAllGroomingServices();
+        Task<List<GetGroomingServiceDTO>> GetAllGroomingServices();
 
         Task<List<GroomingService>> GetAllGroomingServicesByIds(List<int> ids);
 
-        Task UpdateGroomingService(GroomingServiceDTO groomingServiceDTO);
+        Task UpdateGroomingService(GetGroomingServiceDTO groomingServiceDTO);
 
         Task DeleteGroomingService(int groomingServiceId);
+
+        Task<(double price, List<GroomingServiceAppointment> services)> CalculateExtraServices(List<int> ids);
     }
 }

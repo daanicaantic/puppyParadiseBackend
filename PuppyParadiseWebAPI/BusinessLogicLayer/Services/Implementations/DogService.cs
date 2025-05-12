@@ -38,7 +38,7 @@ namespace BusinessLogicLayer.Services.Implementations
         }
 
 
-        public async Task AddDog(DogWithoutIdDTO dogDTO)
+        public async Task AddDog(AddDogDTO dogDTO)
         {
             var owner = await _unitOfWork.Users.GetById(dogDTO.OwnerId);
             if (owner == null)
@@ -50,20 +50,20 @@ namespace BusinessLogicLayer.Services.Implementations
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<DogDTO> GetDogById(int id)
+        public async Task<GetDogDTO> GetDogById(int id)
         {
             var dog = await _unitOfWork.Dogs.GetDogById(id);
             if(dog == null)
                 throw new Exception(DogExceptionsConstants.DogWithGivenIdNotFound);
 
-            return _mapper.Map<DogDTO>(dog);
+            return _mapper.Map<GetDogDTO>(dog);
         }
 
-        public async Task<List<DogDTO>> GetDogsByOwnerId(int ownerId)
+        public async Task<List<GetDogDTO>> GetDogsByOwnerId(int ownerId)
         {
             var dogs = await _unitOfWork.Dogs.GetDogsByOwnerId(ownerId);
 
-            return _mapper.Map<List<DogDTO>>(dogs);
+            return _mapper.Map<List<GetDogDTO>>(dogs);
         }
 
         public async Task UpdateDog(UpdateDogDTO dogUpdateDTO)

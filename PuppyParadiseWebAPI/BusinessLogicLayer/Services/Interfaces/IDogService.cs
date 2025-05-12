@@ -12,11 +12,11 @@ namespace BusinessLogicLayer.Services.Interfaces
     {
         Task SetDogSize(Dog dog);
         
-        Task AddDog(DogWithoutIdDTO dogDto);
+        Task AddDog(AddDogDTO dogDto);
 
-        Task<DogDTO> GetDogById(int id);
+        Task<GetDogDTO> GetDogById(int id);
 
-        Task<List<DogDTO>> GetDogsByOwnerId(int ownerId);
+        Task<List<GetDogDTO>> GetDogsByOwnerId(int ownerId);
 
         Task UpdateDog(UpdateDogDTO dog);
 

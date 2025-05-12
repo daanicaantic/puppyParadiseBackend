@@ -13,7 +13,7 @@ namespace DomainLayer.Profiles.GroomingServiceProfiles
     {
         public GroomingServiceProfile() 
         {
-            CreateMap<GroomingServiceWithoutIdDTO, GroomingService>();
+            CreateMap<AddGroomingServiceDTO, GroomingService>();
         }
     }
 }
