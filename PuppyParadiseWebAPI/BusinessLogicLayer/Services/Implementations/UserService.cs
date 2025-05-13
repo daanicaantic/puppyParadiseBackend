@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLogicLayer.Constants.ExceptionsConstants;
+using BusinessLogicLayer.Helpers;
 using BusinessLogicLayer.Services.Interfaces;
 using DataAccessLayer.Context;
 using DataAccessLayer.Repositories.Implementations;
@@ -30,35 +31,6 @@ namespace BusinessLogicLayer.Services.Implementations
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _passwordHasher = passwordHasher;
-        }
-
-        public async Task AddUser(AddUserDTO userDTO)
-        {
-            var role = await _unitOfWork.Roles.GetById(userDTO.RoleId);
-            if (role == null)
-                throw new Exception("Role not found!");
-
-            var email = await _unitOfWork.Users.GetUserByEmail(userDTO.Email);
-            if (email != null)
-                throw new Exception(UserExceptionsConstants.UserWithGivenEmailAlreadyExists);
-
-            var number = await _unitOfWork.Users.GetUserByPhoneNumber(userDTO.PhoneNumber);
-            if (number != null)
-                throw new Exception(UserExceptionsConstants.UserWithGivenPhoneNumberAlreadyExists);
-
-            /*var user = new User
-             {
-                 Name = userDTO.Name,
-                 Surname = userDTO.Surname,
-                 Email = userDTO.Email,
-                 PhoneNumber = userDTO.PhoneNumber,
-                 RoleId = userDTO.RoleId,
-             };*/
-            var user = _mapper.Map<User>(userDTO);
-            user.Password = _passwordHasher.HashPassword(user, userDTO.Password);
-
-            await _unitOfWork.Users.Add(user);
-            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task<GetUserDTO> GetUserById(int id)
@@ -105,7 +77,6 @@ namespace BusinessLogicLayer.Services.Implementations
         public async Task<PagedResult<GetUserDTO>> GetUsersPerPage(UserFilterDTO usersFilter)
         {
             var pagedResult = await _unitOfWork.Users.GetUsersPerPageAsync(usersFilter);
-
             return pagedResult;
         }
 
@@ -114,6 +85,9 @@ namespace BusinessLogicLayer.Services.Implementations
             var user = await _unitOfWork.Users.GetById(updateUserInfoDTO.Id);
             if (user == null)
                 throw new Exception(UserExceptionsConstants.UserWithGivenIdNotFound);
+
+            if (!RegexHelper.IsValidEmail(updateUserInfoDTO.Email))
+                throw new Exception(UserExceptionsConstants.InvalidEmailFormat);
 
             user.Name = updateUserInfoDTO.Name;
             user.Surname = updateUserInfoDTO.Surname;
@@ -133,7 +107,10 @@ namespace BusinessLogicLayer.Services.Implementations
             if (!string.IsNullOrEmpty(updateUserPasswordDTO.NewPassword) || !string.IsNullOrEmpty(updateUserPasswordDTO.ConfirmPassword))
             {
                 if (updateUserPasswordDTO.NewPassword != updateUserPasswordDTO.ConfirmPassword)
-                    throw new ArgumentException("New password and confirm password do not match.");
+                    throw new ArgumentException(UserExceptionsConstants.PasswordsDoNotMatch);
+
+                if (!RegexHelper.IsValidPassword(updateUserPasswordDTO.NewPassword))
+                    throw new ArgumentException(UserExceptionsConstants.InvalidPasswordFormat);
 
                 user.Password = _passwordHasher.HashPassword(user, updateUserPasswordDTO.NewPassword);
             }

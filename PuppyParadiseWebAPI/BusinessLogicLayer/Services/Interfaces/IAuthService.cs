@@ -8,10 +8,12 @@ using DomainLayer.Models;
 
 namespace BusinessLogicLayer.Services.Interfaces
 {
-    public interface ILoginService
+    public interface IAuthService
     {
         string GenerateToken(User user);
 
-        Task<User?> LogInAsync(LoginRequestDTO loginRequest);
+        Task<LoginResponseDTO> LogInAsync(LoginRequestDTO loginRequest);
+
+        Task<LoginResponseDTO> RegisterAsync(RegisterRequestDTO user);
     }
 }

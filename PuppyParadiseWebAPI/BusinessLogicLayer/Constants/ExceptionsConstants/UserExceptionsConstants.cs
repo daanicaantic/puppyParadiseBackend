@@ -15,5 +15,9 @@ namespace BusinessLogicLayer.Constants.ExceptionsConstants
         public const string UserWithGivenPhoneNumberAlreadyExists = "User with this phone number already exists.";
         public const string UserWithGivenCredentialsNotFound = "User with this email and password doesn't exist.";
         public const string UsersPasswordIsNotCorrect = "Users password is not correct.";
+        public const string PasswordsDoNotMatch = "Passwords do not match.";
+        public const string InvalidEmailFormat = "Invalid email format.";
+        public const string InvalidPasswordFormat = "Password must be at least 6 characters and contain letters and numbers.";
+        public const string RoleNotFound = "Role not found.";
     }
 }

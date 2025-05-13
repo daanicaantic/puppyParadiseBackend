@@ -9,11 +9,11 @@ using DomainLayer.Models;
 
 namespace DomainLayer.Profiles.UserProfiles
 {
-    public class AddUserProfile : Profile
+    public class RegisterUserProfile : Profile
     {
-        public AddUserProfile()
+        public RegisterUserProfile()
         {
-            CreateMap<AddUserDTO, User>();
+            CreateMap<RegisterRequestDTO, User>();
         }
     }
 }
