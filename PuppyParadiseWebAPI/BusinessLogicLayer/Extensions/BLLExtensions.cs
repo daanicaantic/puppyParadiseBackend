@@ -22,7 +22,7 @@ namespace BusinessLogicLayer.Extensions
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
-            services.AddScoped<ILoginService, LoginService>();
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IDogService, DogService>();
             services.AddScoped<IGroomingPackageService, GroomingPackageService>();
             services.AddScoped<IGroomingServiceService, GroomingServiceService>();

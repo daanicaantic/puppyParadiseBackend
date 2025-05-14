@@ -20,21 +20,6 @@ namespace PresentationLayer.Controllers
             _userService = userService;
         }
 
-        [Route("AddUser")]
-        [HttpPost]
-        public async Task<IActionResult> AddUser([FromBody] AddUserDTO user)
-        {
-            try
-            {
-                await _userService.AddUser(user);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
         [Route("GetUser/{id}")]
         [HttpGet]
         public async Task<IActionResult> GetUser(int id)
@@ -42,7 +27,6 @@ namespace PresentationLayer.Controllers
             try
             {
                 var user = await _userService.GetUserById(id);
-
                 return Ok(user);
             }
             catch (Exception ex)
@@ -58,7 +42,6 @@ namespace PresentationLayer.Controllers
             try
             {
                 var user = await _userService.GetUserByEmail(email);
-
                 return Ok(user);
             }
             catch (Exception ex)
@@ -74,7 +57,6 @@ namespace PresentationLayer.Controllers
             try
             {
                 var user = await _userService.GetUserByPhoneNumber(phoneNumber);
-
                 return Ok(user);
             }
             catch (Exception ex)
@@ -90,7 +72,6 @@ namespace PresentationLayer.Controllers
             try
             {
                 await _userService.DeleteUser(id);
-
                 return Ok();
             }
             catch (Exception ex)
@@ -106,8 +87,37 @@ namespace PresentationLayer.Controllers
             try
             {
                 var result = await _userService.GetUsersPerPage(usersFilter);
-
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Route("UpdateUserInfo")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateUserInfo([FromBody] UpdateUserInfoDTO updateUserInfoDTO)
+        {
+            try
+            {
+                await _userService.UpdateUserInfo(updateUserInfoDTO);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Route("UpdateUserPassword")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateUserPassword([FromBody] UpdateUserPasswordDTO updateUserPasswordDTO)
+        {
+            try
+            {
+                await _userService.UpdateUserPassword(updateUserPasswordDTO);
+                return Ok();
             }
             catch (Exception ex)
             {

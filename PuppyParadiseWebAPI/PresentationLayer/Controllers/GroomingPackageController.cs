@@ -1,7 +1,9 @@
 ﻿using BusinessLogicLayer.Services.Implementations;
 using BusinessLogicLayer.Services.Interfaces;
+using DomainLayer.Constants;
 using DomainLayer.DTOs.GroomingPackageDTOs;
 using DomainLayer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -48,6 +50,7 @@ namespace PresentationLayer.Controllers
             }
         }
 
+        [Authorize(Roles = ConstRoles.Admin)]
         [Route("GetAllGroomingPackages")]
         [HttpGet]
         public async Task<IActionResult> GetAllGroomingPackages()

@@ -23,36 +23,31 @@ namespace DataAccessLayer.Repositories.Implementations
             _mapper = mapper;
         }
 
-        public async Task<GetUserDTO> GetUserById(int id)
+        public async Task<User> GetUserById(int id)
         {
             var user = await _puppyParadiseContext.Users
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.Id == id);
-
-            return _mapper.Map<GetUserDTO>(user);
+            return user;
         }
 
         public async Task<User> GetUserByEmail(string email)
         {
-            var user = await _puppyParadiseContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var user = await _puppyParadiseContext.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Email == email);
             return user;
         }
 
         public async Task<User> GetUserByPhoneNumber(string phoneNumber)
         {
-            var user = await _puppyParadiseContext.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
-            return user;
-        }
-
-        public async Task<User?> GetUserByCredentialsAsync(string email, string password)
-        {
             var user = await _puppyParadiseContext.Users
                 .Include(u => u.Role)
-                .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+                .FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
             return user;
         }
 
-        public async Task<PagedResult<UserDTO>> GetUsersPerPageAsync(UserFilterDTO usersFilter)
+        public async Task<PagedResult<GetUserDTO>> GetUsersPerPageAsync(UserFilterDTO usersFilter)
         {
             var query = _puppyParadiseContext.Users
                 .Include(u => u.Role)
@@ -84,9 +79,9 @@ namespace DataAccessLayer.Repositories.Implementations
                 .Take(usersFilter.PageSize)
                 .ToListAsync();
 
-            return new PagedResult<UserDTO>
+            return new PagedResult<GetUserDTO>
             {
-                Items = _mapper.Map<List<UserDTO>>(users),
+                Items = _mapper.Map<List<GetUserDTO>>(users),
                 TotalCount = totalCount,
                 Page = usersFilter.Page,
                 PageSize = usersFilter.PageSize
