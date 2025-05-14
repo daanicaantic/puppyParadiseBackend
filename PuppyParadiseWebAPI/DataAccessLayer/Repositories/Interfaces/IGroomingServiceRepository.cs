@@ -11,6 +11,8 @@ namespace DataAccessLayer.Repositories.Interfaces
     public interface IGroomingServiceRepository : IRepository<GroomingService>
     {
 
-        Task<List<GroomingServiceDTO>> GetAllGroomingServices();
+        Task<List<GetGroomingServiceDTO>> GetAllGroomingServices();
+
+        Task<List<GroomingService>> GetAllGroomingServicesByIds(List<int> ids);
     }
 }

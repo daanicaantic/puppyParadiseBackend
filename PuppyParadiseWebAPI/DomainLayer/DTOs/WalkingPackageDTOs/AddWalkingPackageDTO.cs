@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DomainLayer.DTOs.GroomingServiceDTOs
+namespace DomainLayer.DTOs.WalkingPackageDTOs
 {
-    public class GroomingServiceDTO
+    public class AddWalkingPackageDTO
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public double Price { get; set; }

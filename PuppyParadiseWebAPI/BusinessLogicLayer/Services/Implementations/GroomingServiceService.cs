@@ -32,7 +32,7 @@ namespace BusinessLogicLayer.Services.Implementations
             return groomingService;
         }
 
-        public async Task AddGroomingService(GroomingServiceWithoutIdDTO groomingServiceWithoutIdDTO)
+        public async Task AddGroomingService(AddGroomingServiceDTO groomingServiceWithoutIdDTO)
         {
             var groomingService = _mapper.Map<GroomingService>(groomingServiceWithoutIdDTO);
 
@@ -40,12 +40,18 @@ namespace BusinessLogicLayer.Services.Implementations
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<List<GroomingServiceDTO>> GetAllGroomingServices()
+        public async Task<List<GetGroomingServiceDTO>> GetAllGroomingServices()
         {
             return await _unitOfWork.GroomingServices.GetAllGroomingServices();
         }
 
-        public async Task UpdateGroomingService(GroomingServiceDTO groomingServiceDTO)
+        public async Task<List<GroomingService>> GetAllGroomingServicesByIds(List<int> ids)
+        {
+            return await _unitOfWork.GroomingServices.GetAllGroomingServicesByIds(ids);
+        }
+
+
+        public async Task UpdateGroomingService(GetGroomingServiceDTO groomingServiceDTO)
         {
             var gsForEdit = await GetGroomingServiceById(groomingServiceDTO.Id);
 
@@ -65,5 +71,27 @@ namespace BusinessLogicLayer.Services.Implementations
             await _unitOfWork.SaveChangesAsync();
         }
 
+        public async Task<(double price, List<GroomingServiceAppointment> services)> CalculateExtraServices(List<int> ids)
+        {
+            if (ids == null || !ids.Any())
+                return (0, new List<GroomingServiceAppointment>());
+
+            var services = await _unitOfWork.GroomingServices.GetAllGroomingServicesByIds(ids);
+
+            var foundIds = services.Select(s => s.Id).ToHashSet();
+            var missingIds = ids.Where(id => !foundIds.Contains(id)).ToList();
+
+            if (missingIds.Any())
+                throw new Exception(string.Format(GroomingServiceExceptionsConstants.MissingGroomingService, string.Join(",", missingIds)));
+
+            var price = services.Sum(s => s.Price);
+
+            var appointments = services.Select(s => new GroomingServiceAppointment
+            {
+                GroomingServiceId = s.Id
+            }).ToList();
+
+            return (price, appointments);
+        }
     }
 }

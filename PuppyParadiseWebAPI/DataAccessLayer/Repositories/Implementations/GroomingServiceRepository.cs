@@ -17,16 +17,23 @@ namespace DataAccessLayer.Repositories.Implementations
         {
         }
 
-        public async Task<List<GroomingServiceDTO>> GetAllGroomingServices()
+        public async Task<List<GetGroomingServiceDTO>> GetAllGroomingServices()
         {
             return await _puppyParadiseContext.GroomingServices
-                .Select(s => new GroomingServiceDTO()
+                .Select(s => new GetGroomingServiceDTO()
                 {
                     Id = s.Id,
                     Name = s.Name,
                     Description = s.Description,
                     Price = s.Price,
                 }).ToListAsync();
+        }
+
+        public async Task<List<GroomingService>> GetAllGroomingServicesByIds(List<int> ids)
+        {
+            return await _puppyParadiseContext.GroomingServices
+                                 .Where(gs => ids.Contains(gs.Id))
+                                 .ToListAsync();
         }
     }
 }

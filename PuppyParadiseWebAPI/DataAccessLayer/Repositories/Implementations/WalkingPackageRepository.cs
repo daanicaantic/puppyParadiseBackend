@@ -17,10 +17,10 @@ namespace DataAccessLayer.Repositories.Implementations
         {
         }
 
-        public async Task<List<WalkingPackageDTO>> GetAllWalkingPackage()
+        public async Task<List<GetWalkingPackageDTO>> GetAllWalkingPackage()
         {
             return await _puppyParadiseContext.WalkingPackages
-                .Select(s => new WalkingPackageDTO
+                .Select(s => new GetWalkingPackageDTO
                 {
                     Id = s.Id,
                     Name = s.Name,

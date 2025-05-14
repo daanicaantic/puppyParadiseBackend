@@ -20,7 +20,7 @@ namespace PresentationLayer.Controllers
 
         [Route("AddGroomingService")]
         [HttpPost]
-        public async Task<IActionResult> AddGroomingService([FromBody] GroomingServiceWithoutIdDTO groomingServiceWithoutIdDTO)
+        public async Task<IActionResult> AddGroomingService([FromBody] AddGroomingServiceDTO groomingServiceWithoutIdDTO)
         {
             try
             {
@@ -48,9 +48,9 @@ namespace PresentationLayer.Controllers
             }
         }
 
-        [Route("GetAllGroomingSevices")]
+        [Route("GetAllGroomingServices")]
         [HttpGet]
-        public async Task<IActionResult> GetAllGroomingSevices()
+        public async Task<IActionResult> GetAllGroomingServices()
         {
             try
             {
@@ -65,7 +65,7 @@ namespace PresentationLayer.Controllers
 
         [Route("UpdateGroomingService")]
         [HttpPut]
-        public async Task<IActionResult> UpdateGroomingService([FromBody] GroomingServiceDTO groomingServiceDTO)
+        public async Task<IActionResult> UpdateGroomingService([FromBody] GetGroomingServiceDTO groomingServiceDTO)
         {
             try
             {

@@ -9,5 +9,7 @@ namespace DataAccessLayer.Repositories.Interfaces
 {
     public interface IAppointmentGroomingRepository : IRepository<AppointmentGrooming>
     {
+        Task<AppointmentGrooming> GetAppointmentGroomingById(int id);
+        Task<List<AppointmentGrooming>> GetAllAppointmentGroomings();
     }
 }

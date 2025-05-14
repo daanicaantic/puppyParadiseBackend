@@ -12,11 +12,11 @@ namespace BusinessLogicLayer.Services.Interfaces
     {
         Task<WalkingPackage> GetWalkingPackageById(int walkingPackageId);
 
-        Task AddWalkingPackage(WalkingPackageWithoutIdDTO walkingPackageWithoutIdDTO);
+        Task AddWalkingPackage(AddWalkingPackageDTO walkingPackageWithoutIdDTO);
 
-        Task<List<WalkingPackageDTO>> GetAllWalkingPackages();
+        Task<List<GetWalkingPackageDTO>> GetAllWalkingPackages();
 
-        Task UpdateWalkingPackage(WalkingPackageDTO walkingPackageDTO);
+        Task UpdateWalkingPackage(GetWalkingPackageDTO walkingPackageDTO);
 
         Task DeleteWalkingPackage(int walkingPackageId);
     }

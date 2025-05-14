@@ -19,7 +19,7 @@ namespace PresentationLayer.Controllers
 
         [Route("AddWalkingPackage")]
         [HttpPost]
-        public async Task<IActionResult> AddWalkingPackage([FromBody] WalkingPackageWithoutIdDTO walkingPackageWithoutIdDTO)
+        public async Task<IActionResult> AddWalkingPackage([FromBody] AddWalkingPackageDTO walkingPackageWithoutIdDTO)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace PresentationLayer.Controllers
 
         [Route("UpdateWalkingPackage")]
         [HttpPut]
-        public async Task<IActionResult> UpdateGroomingService([FromBody] WalkingPackageDTO walkingPackageDTO)
+        public async Task<IActionResult> UpdateGroomingService([FromBody] GetWalkingPackageDTO walkingPackageDTO)
         {
             try
             {
