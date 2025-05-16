@@ -4,32 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DomainLayer.Models
+namespace DomainLayer.DTOs.AppointmentSittingDTOs
 {
-    public class AppointmentSitting
+    public class AppointmentSittingDTO
     {
-        public int Id { get; set; }
-
         public int DogId { get; set; }
-
-        public Dog Dog { get; set; }
-
-        public int UserId { get; set; }
-
-        public User User { get; set; }
-
         public DateOnly DropoffDate { get; set; }
-
         public TimeOnly DropoffTime { get; set; }
-
         public DateOnly PickupDate { get; set; }
-
         public TimeOnly PickupTime { get; set; }
-
-        public double TotalPrice { get; set; }
-
-        public string Status { get; set; }
-
-        public string? Note { get; set; }
     }
 }

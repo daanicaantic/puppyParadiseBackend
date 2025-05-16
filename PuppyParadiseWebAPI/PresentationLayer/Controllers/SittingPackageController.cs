@@ -31,13 +31,28 @@ namespace PresentationLayer.Controllers
             }
         }
 
-        [Route("GetSittingPackage/{id}")]
+        [Route("GetSittingPackageById/{id}")]
         [HttpGet]
-        public async Task<IActionResult> GetSittingPackage(int id)
+        public async Task<IActionResult> GetSittingPackageById(int id)
         {
             try
             {
                 var sp = await _sittingPackageService.GetSittingPackageById(id);
+                return Ok(sp);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Route("GetSittingPackageByName/{name}")]
+        [HttpGet]
+        public async Task<IActionResult> GetSittingPackageByName(string name)
+        {
+            try
+            {
+                var sp = await _sittingPackageService.GetSittingPackageByName(name);
                 return Ok(sp);
             }
             catch (Exception ex)

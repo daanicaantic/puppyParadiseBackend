@@ -11,6 +11,8 @@ namespace BusinessLogicLayer.Services.Interfaces
     {
         Task<SittingPackage> GetSittingPackageById(int sittingPackageId);
 
+        Task<SittingPackage> GetSittingPackageByName(string name);
+
         Task AddSittingPackage(SittingPackage sittingPackage);
 
         Task<List<SittingPackage>> GetAllSittingPackages();
