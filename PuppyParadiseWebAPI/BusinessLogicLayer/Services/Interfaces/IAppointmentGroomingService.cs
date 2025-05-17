@@ -21,6 +21,6 @@ namespace BusinessLogicLayer.Services.Interfaces
 
         Task<List<GetAppointmentGroomingDTO>> GetAllAppointmentGroomings();
 
-        Task DeleteAppointmentGrooming(int appointmentId);
+        Task DeleteAppointmentGrooming(int appointmentId,int userId);
     }
 }

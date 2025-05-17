@@ -24,20 +24,18 @@ namespace PresentationLayer.Controllers
 
         [Route("AddAppointmentGrooming")]
         [HttpPost]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> AddAppointmentGrooming([FromBody] AddAppointmentGroomingDTO dto)
         {
             try
             {
-                /*var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (userId == null)
                     return Unauthorized();
 
-                int parsedUserId = int.Parse(userId);*/
+                int parsedUserId = int.Parse(userId);
 
-                var userId = 1;
-
-                await _appointmentGroomingService.AddAppointmentGrooming(dto, userId);
+                await _appointmentGroomingService.AddAppointmentGrooming(dto, parsedUserId);
 
                 return Ok();
             }
@@ -49,7 +47,7 @@ namespace PresentationLayer.Controllers
 
         [Route("UpdateAppointmentGrooming/status/{appointmentId}")]
         [HttpPut]
-        //[Authorize(Roles = "Admin")]  
+        [Authorize(Roles = ConstRoles.Admin)]  
         public async Task<IActionResult> UpdateAppointmentStatus(int appointmentId, [FromBody] string newStatus)
         {
             if (!StatusValidator.IsValid(newStatus))
@@ -66,18 +64,18 @@ namespace PresentationLayer.Controllers
         }
 
         [Route("UpdateAppointmentGrooming")]
-        [HttpPut] 
-        public async Task<IActionResult> UpdateAppointmentStatus([FromBody] UpdateAppointmentGroomingDTO dto)
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> UpdateAppointmentGrooming([FromBody] UpdateAppointmentGroomingDTO dto)
         {
-            /*var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                  if (userId == null)
                      return Unauthorized();
 
-                 int parsedUserId = int.Parse(userId);*/
-            int userId = 1;
+            int parsedUserId = int.Parse(userId);
             try
             {
-                await _appointmentGroomingService.UpdateAppointmentGrooming(dto,userId);
+                await _appointmentGroomingService.UpdateAppointmentGrooming(dto,parsedUserId);
                 return Ok();
             }
             catch (Exception ex)
@@ -134,12 +132,17 @@ namespace PresentationLayer.Controllers
        
         [Route("DeleteAppointmentGrooming/{appointmentId}")]
         [HttpDelete]
-        //[Authorize(Roles = ConstRoles.Admin)] 
+        [Authorize] 
         public async Task<ActionResult> DeleteAppointmentGrooming(int appointmentId)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+                return Unauthorized();
+
+            int parsedUserId = int.Parse(userId);
             try
             {
-                await _appointmentGroomingService.DeleteAppointmentGrooming(appointmentId);
+                await _appointmentGroomingService.DeleteAppointmentGrooming(appointmentId,parsedUserId);
                 return Ok();
             }
             catch (Exception ex)
@@ -147,7 +150,5 @@ namespace PresentationLayer.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-
     }
 }
