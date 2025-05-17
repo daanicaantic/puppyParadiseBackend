@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DomainLayer.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,6 @@ namespace DomainLayer.DTOs.AppointmentGroomingDTOs
         public DateOnly AppointmentDate { get; set; }
         public TimeOnly AppointmentTime { get; set; }
         public int GroomingPackageId { get; set; }
-        public List<int> ExtraServiceIds { get; set; } 
+        public List<int> ExtraServiceIds { get; set; }
     }
 }

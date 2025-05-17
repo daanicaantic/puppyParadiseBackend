@@ -38,13 +38,15 @@ namespace BusinessLogicLayer.Services.Implementations
         }
 
 
-        public async Task AddDog(AddDogDTO dogDTO)
-        {
-            var owner = await _unitOfWork.Users.GetById(dogDTO.OwnerId);
-            if (owner == null)
-                throw new Exception(UserExceptionsConstants.UserWithGivenIdNotFound);
+        public async Task AddDog(AddDogDTO dogDTO, int userId)
+        { 
+            if (dogDTO.Weight < 0)
+            {
+                throw new Exception(DogExceptionsConstants.NegativeDogWeight);
+            }
 
             var dog = _mapper.Map<Dog>(dogDTO);
+            dog.OwnerId = userId;
             await SetDogSize(dog);
             await _unitOfWork.Dogs.Add(dog);
             await _unitOfWork.SaveChangesAsync();

@@ -16,8 +16,8 @@ namespace DomainLayer.Profiles.AppointmentGroomingProfiles
             CreateMap<AppointmentGrooming, GetAppointmentGroomingDTO>()
             .ForMember(dest => dest.DogName, 
                 opt => opt.MapFrom(src => src.Dog.Name))
-            .ForMember(dest => dest.UserName, 
-                opt => opt.MapFrom(src => src.User.Name + " " + src.User.Surname))
+            .ForMember(dest => dest.UserEmail, 
+                opt => opt.MapFrom(src => src.User.Email))
             .ForMember(dest => dest.AppointmentDate,
                 opt => opt.MapFrom(src => src.AppointmentDate))
             .ForMember(dest => dest.AppointmentTime,

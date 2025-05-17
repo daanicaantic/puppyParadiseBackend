@@ -10,7 +10,7 @@ namespace DomainLayer.DTOs.AppointmentGroomingDTOs
     {
         public int Id { get; set; }
         public string DogName { get; set; }
-        public string UserName { get; set; }
+        public string UserEmail { get; set; }
         public DateOnly AppointmentDate { get; set; }
         public TimeOnly AppointmentTime { get; set; }
         public string GroomingPackageName { get; set; }

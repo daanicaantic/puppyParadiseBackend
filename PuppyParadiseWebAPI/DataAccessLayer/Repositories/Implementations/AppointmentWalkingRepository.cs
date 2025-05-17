@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DataAccessLayer.Context;
 using DataAccessLayer.Repositories.Interfaces;
 using DomainLayer.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer.Repositories.Implementations
 {
@@ -13,6 +14,27 @@ namespace DataAccessLayer.Repositories.Implementations
     {
         public AppointmentWalkingRepository(PuppyParadiseContext puppyParadiseContext) : base(puppyParadiseContext)
         {
+
+        }
+
+        public async Task<List<AppointmentWalking>> GetAllAppointmentWalkings()
+        {
+            return await _puppyParadiseContext.AppointmentWalkings
+                   .Include(a => a.Dog)
+                   .Include(a => a.User)
+                   .Include(a => a.WalkingPackage)
+                   .ToListAsync();
+        }
+
+        public async Task<AppointmentWalking> GetAppointmentWalkingById(int id)
+        {
+            var appointment =  await _puppyParadiseContext.AppointmentWalkings
+                  .Include(a => a.Dog)
+                  .Include(a => a.User)
+                  .Include(a => a.WalkingPackage)
+                  .FirstOrDefaultAsync(a => a.Id == id);
+
+            return appointment;
         }
     }
 }
