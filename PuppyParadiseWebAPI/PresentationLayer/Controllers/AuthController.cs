@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using DomainLayer.DTOs.UserDTOs;
 using DomainLayer.Models;
 using BusinessLogicLayer.Services.Interfaces;
+using BusinessLogicLayer.Constants.ExceptionsConstants;
+using BusinessLogicLayer.Helpers;
 
 namespace PresentationLayer.Controllers
 {
@@ -25,6 +27,9 @@ namespace PresentationLayer.Controllers
         {
             try
             {
+                if (!RegexHelper.IsValidEmail(request.Email))
+                    throw new Exception(UserExceptionsConstants.InvalidEmailFormat);
+
                 var loginResponse = await _authService.LogInAsync(request);
                 return Ok(loginResponse);
             }
@@ -40,6 +45,15 @@ namespace PresentationLayer.Controllers
         {
             try
             {
+                if (!RegexHelper.IsValidEmail(request.Email))
+                    throw new Exception(UserExceptionsConstants.InvalidEmailFormat);
+
+                if (!RegexHelper.IsValidPassword(request.Password))
+                    throw new Exception(UserExceptionsConstants.InvalidPasswordFormat);
+
+                if (request.Password != request.ConfirmPassword)
+                    throw new Exception(UserExceptionsConstants.PasswordsDoNotMatch);
+
                 var registerResponse = await _authService.RegisterAsync(request);
                 return Ok(registerResponse);
             }
