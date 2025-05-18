@@ -86,13 +86,15 @@ namespace BusinessLogicLayer.Services.Implementations
             if (user == null)
                 throw new Exception(UserExceptionsConstants.UserWithGivenIdNotFound);
 
-            if (!RegexHelper.IsValidEmail(updateUserInfoDTO.Email))
-                throw new Exception(UserExceptionsConstants.InvalidEmailFormat);
+            var existingUserByEmail = await _unitOfWork.Users.GetUserByEmail(updateUserInfoDTO.Email);
+            if (existingUserByEmail != null && existingUserByEmail.Id != updateUserInfoDTO.Id)
+                throw new Exception(UserExceptionsConstants.UserWithGivenEmailAlreadyExists);
 
-            user.Name = updateUserInfoDTO.Name;
-            user.Surname = updateUserInfoDTO.Surname;
-            user.Email = updateUserInfoDTO.Email;
-            user.PhoneNumber = updateUserInfoDTO.PhoneNumber;
+            var existingUserByNumber = await _unitOfWork.Users.GetUserByPhoneNumber(updateUserInfoDTO.PhoneNumber);
+            if (existingUserByNumber != null && existingUserByNumber.Id != updateUserInfoDTO.Id)
+                throw new Exception(UserExceptionsConstants.UserWithGivenPhoneNumberAlreadyExists);
+
+            _mapper.Map(updateUserInfoDTO, user);
 
             _unitOfWork.Users.Update(user);
             await _unitOfWork.SaveChangesAsync();
@@ -104,16 +106,7 @@ namespace BusinessLogicLayer.Services.Implementations
             if (user == null)
                 throw new Exception(UserExceptionsConstants.UserWithGivenIdNotFound);
 
-            if (!string.IsNullOrEmpty(updateUserPasswordDTO.NewPassword) || !string.IsNullOrEmpty(updateUserPasswordDTO.ConfirmPassword))
-            {
-                if (updateUserPasswordDTO.NewPassword != updateUserPasswordDTO.ConfirmPassword)
-                    throw new ArgumentException(UserExceptionsConstants.PasswordsDoNotMatch);
-
-                if (!RegexHelper.IsValidPassword(updateUserPasswordDTO.NewPassword))
-                    throw new ArgumentException(UserExceptionsConstants.InvalidPasswordFormat);
-
-                user.Password = _passwordHasher.HashPassword(user, updateUserPasswordDTO.NewPassword);
-            }
+            user.Password = _passwordHasher.HashPassword(user, updateUserPasswordDTO.NewPassword);
 
             _unitOfWork.Users.Update(user);
             await _unitOfWork.SaveChangesAsync();
