@@ -1,4 +1,6 @@
-﻿using BusinessLogicLayer.Services.Implementations;
+﻿using BusinessLogicLayer.Constants.ExceptionsConstants;
+using BusinessLogicLayer.Helpers;
+using BusinessLogicLayer.Services.Implementations;
 using BusinessLogicLayer.Services.Interfaces;
 using DataAccessLayer.Context;
 using DataAccessLayer.Repositories.Interfaces;
@@ -101,6 +103,9 @@ namespace PresentationLayer.Controllers
         {
             try
             {
+                if (!RegexHelper.IsValidEmail(updateUserInfoDTO.Email))
+                    throw new Exception(UserExceptionsConstants.InvalidEmailFormat);
+
                 await _userService.UpdateUserInfo(updateUserInfoDTO);
                 return Ok();
             }
@@ -116,6 +121,12 @@ namespace PresentationLayer.Controllers
         {
             try
             {
+                if (updateUserPasswordDTO.NewPassword != updateUserPasswordDTO.ConfirmPassword)
+                    throw new ArgumentException(UserExceptionsConstants.PasswordsDoNotMatch);
+
+                if (!RegexHelper.IsValidPassword(updateUserPasswordDTO.NewPassword))
+                    throw new ArgumentException(UserExceptionsConstants.InvalidPasswordFormat);
+
                 await _userService.UpdateUserPassword(updateUserPasswordDTO);
                 return Ok();
             }

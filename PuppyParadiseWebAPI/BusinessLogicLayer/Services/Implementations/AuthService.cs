@@ -60,9 +60,6 @@ namespace BusinessLogicLayer.Services.Implementations
 
         public async Task<LoginResponseDTO> LogInAsync(LoginRequestDTO loginRequest)
         {
-            if (!RegexHelper.IsValidEmail(loginRequest.Email))
-                throw new Exception(UserExceptionsConstants.InvalidEmailFormat);
-
             var user = await _unitOfWork.Users.GetUserByEmail(loginRequest.Email);
             if (user == null)
                 throw new Exception(UserExceptionsConstants.UserWithGivenEmailNotFound);
@@ -73,36 +70,28 @@ namespace BusinessLogicLayer.Services.Implementations
 
             var token = GenerateToken(user);
 
-            var loginResponse = new LoginResponseDTO();
-
-            loginResponse.UserId = user.Id;
-            loginResponse.Role = user.Role?.Name ?? "User";
-            loginResponse.Token = token;
+            var loginResponse = new LoginResponseDTO
+            {
+                UserId = user.Id,
+                Role = user.Role?.Name ?? "User",
+                Token = token,
+            };
 
             return loginResponse;
         }
 
         public async Task<LoginResponseDTO> RegisterAsync(RegisterRequestDTO registerRequest)
         {
-            if (!RegexHelper.IsValidEmail(registerRequest.Email))
-                throw new Exception(UserExceptionsConstants.InvalidEmailFormat);
-
-            var existingUser = await _unitOfWork.Users.GetUserByEmail(registerRequest.Email);
-            if (existingUser != null)
-                throw new Exception(UserExceptionsConstants.UserWithGivenEmailAlreadyExists);
-
-            if (!RegexHelper.IsValidPassword(registerRequest.Password))
-                throw new Exception(UserExceptionsConstants.InvalidPasswordFormat);
-
-            if (registerRequest.Password != registerRequest.ConfirmPassword)
-                throw new Exception(UserExceptionsConstants.PasswordsDoNotMatch);
-
             var role = await _unitOfWork.Roles.GetById(registerRequest.RoleId);
             if (role == null)
                 throw new Exception(UserExceptionsConstants.RoleNotFound);
 
-            var number = await _unitOfWork.Users.GetUserByPhoneNumber(registerRequest.PhoneNumber);
-            if (number != null)
+            var existingUserByEmail = await _unitOfWork.Users.GetUserByEmail(registerRequest.Email);
+            if (existingUserByEmail != null)
+                throw new Exception(UserExceptionsConstants.UserWithGivenEmailAlreadyExists);
+
+            var existingUserByNumber = await _unitOfWork.Users.GetUserByPhoneNumber(registerRequest.PhoneNumber);
+            if (existingUserByNumber != null)
                 throw new Exception(UserExceptionsConstants.UserWithGivenPhoneNumberAlreadyExists);
 
             var user = _mapper.Map<User>(registerRequest);
@@ -113,11 +102,12 @@ namespace BusinessLogicLayer.Services.Implementations
 
             var token = GenerateToken(user);
 
-            var loginResponse = new LoginResponseDTO();
-
-            loginResponse.UserId = user.Id;
-            loginResponse.Role = user.Role?.Name ?? "User";
-            loginResponse.Token = token;
+            var loginResponse = new LoginResponseDTO
+            {
+                UserId = user.Id,
+                Role = user.Role?.Name ?? "User",
+                Token = token,
+            };
 
             return loginResponse;
         }
