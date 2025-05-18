@@ -14,6 +14,6 @@ namespace DataAccessLayer.Repositories.Interfaces
 
         Task<IEnumerable<AppointmentSitting>> GetByUserIdAsync(int userId);
 
-        Task<bool> HasOverlappingAppointmentAsync(AppointmentTimeRangeDTO appointment);
+        Task<bool> HasOverlappingAppointmentAsync(AppointmentSittingDTO appointment, int? excludeAppointmentId);
     }
 }

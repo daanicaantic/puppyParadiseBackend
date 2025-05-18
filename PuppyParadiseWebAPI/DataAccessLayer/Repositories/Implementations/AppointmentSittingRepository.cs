@@ -36,24 +36,21 @@ namespace DataAccessLayer.Repositories.Implementations
             return sittingAppointmentUser;
         }
 
-        public async Task<bool> HasOverlappingAppointmentAsync(AppointmentTimeRangeDTO appointment)
+        public async Task<bool> HasOverlappingAppointmentAsync(AppointmentSittingDTO appointment, int? excludeAppointmentId)
         {
-            var dropoff = appointment.DropoffDate.ToDateTime(appointment.DropoffTime);
-            var pickup = appointment.PickupDate.ToDateTime(appointment.PickupTime);
-
-            var appointments = await _puppyParadiseContext.AppointmentSittings
-                .Where(a => a.DogId == appointment.DogId && (appointment.ExcludeAppointmentId == null || a.Id != appointment.ExcludeAppointmentId))
-                .ToListAsync();
-
-            return appointments.Any(a =>
-            {
-                var existingDropoff = a.DropoffDate.ToDateTime(a.DropoffTime);
-                var existingPickup = a.PickupDate.ToDateTime(a.PickupTime);
-
-                //The existing appointment starts before the new one ends,
-                //And the existing appointment ends after the new one starts.
-                return dropoff < existingPickup && existingDropoff < pickup;
-            });
+            var appointments =  await _puppyParadiseContext.AppointmentSittings
+                .Where(a =>
+                    a.DogId == appointment.DogId && (excludeAppointmentId == null || a.Id != excludeAppointmentId))
+                .AnyAsync(a =>
+                    // existing start < new end:
+                    (a.DropoffDate < appointment.PickupDate
+                    || (a.DropoffDate == appointment.PickupDate && a.DropoffTime < appointment.PickupTime))
+                    &&
+                    // new start < existing end:
+                    (appointment.DropoffDate < a.PickupDate
+                    || (appointment.DropoffDate == a.PickupDate && appointment.DropoffTime < a.PickupTime))
+                );
+            return appointments;
         }
     }
 }

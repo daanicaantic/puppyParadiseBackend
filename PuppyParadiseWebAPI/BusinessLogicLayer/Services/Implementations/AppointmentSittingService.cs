@@ -29,56 +29,27 @@ namespace BusinessLogicLayer.Services.Implementations
 
         public async Task<GetAppointmentSittingDTO> CreateSittingAppointmentAsync(AddAppointmentSittingDTO appointment)
         {
-            var dog = await _unitOfWork.Dogs.GetById(appointment.DogId);
+            var dog = await _unitOfWork.Dogs.GetDogById(appointment.DogId);
             if (dog == null)
-                throw new Exception($"Dog with ID {appointment.DogId} not found"); //DogWithGivenIdNotFound
+                throw new Exception(DogExceptionsConstants.DogWithGivenIdNotFound);
 
             var user = await _unitOfWork.Users.GetById(appointment.UserId);
             if (user == null)
-                throw new Exception($"User with ID {appointment.UserId} not found"); //UserWithGivenIdNotFound
+                throw new Exception(UserExceptionsConstants.UserWithGivenIdNotFound);
 
-            var dropoff = appointment.DropoffDate.ToDateTime(appointment.DropoffTime);
-            var pickup = appointment.PickupDate.ToDateTime(appointment.PickupTime);
+            var (dropoff, pickup) = AppointmentSittingServiceHelpers.ValidateAndGetDateTimes(appointment.DropoffDate, appointment.DropoffTime, appointment.PickupDate, appointment.PickupTime);
 
-            if (pickup <= dropoff)
-                throw new Exception("Pickup time must be after dropoff time.");
+            var appointmentTimeConflict = _mapper.Map<AppointmentSittingDTO>(appointment);
 
-            var appointmentTimeConflict = new AppointmentTimeRangeDTO
-            {
-                DogId = appointment.DogId,
-                DropoffDate = appointment.DropoffDate,
-                DropoffTime = appointment.DropoffTime,
-                PickupDate = appointment.PickupDate,
-                PickupTime = appointment.PickupTime
-            };
-
-            bool hasConflict = await _unitOfWork.SittingAppointments.HasOverlappingAppointmentAsync(appointmentTimeConflict);
+            bool hasConflict = await _unitOfWork.SittingAppointments.HasOverlappingAppointmentAsync(appointmentTimeConflict, null);
             if (hasConflict)
-                throw new Exception("The selected dog already has another sitting appointment during the requested time.");
+                throw new Exception(AppointmentSittingExceptionsConstants.DogHasOverlappingAppointment);
 
-            var priceDTO = new AppointmentSittingDTO
-            {
-                DogId = appointment.DogId,
-                DropoffDate = appointment.DropoffDate,
-                DropoffTime = appointment.DropoffTime,
-                PickupDate = appointment.PickupDate,
-                PickupTime = appointment.PickupTime
-            };
+            var totalPrice = await CalculateTotalPriceAsync(dog, dropoff, pickup);
 
-            var totalPrice = await CalculateTotalPriceAsync(priceDTO);
-
-            var sittingAppointment = new AppointmentSitting
-            {
-                DogId = appointment.DogId,
-                UserId = appointment.UserId,
-                DropoffDate = appointment.DropoffDate,
-                DropoffTime = appointment.DropoffTime,
-                PickupDate = appointment.PickupDate,
-                PickupTime = appointment.PickupTime,
-                Note = appointment.Note ?? string.Empty,
-                TotalPrice = totalPrice,
-                Status = ConstStatus.Pending
-            };
+            var sittingAppointment = _mapper.Map<AppointmentSitting>(appointment);
+            sittingAppointment.TotalPrice = totalPrice;
+            sittingAppointment.Status = ConstStatus.Pending;
 
             await _unitOfWork.SittingAppointments.Add(sittingAppointment);
             await _unitOfWork.SaveChangesAsync();
@@ -138,46 +109,30 @@ namespace BusinessLogicLayer.Services.Implementations
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<GetAppointmentSittingDTO> UpdateAppointmentAsync(UpdateAppointmentSittingDTO appointmentDTO)
+        public async Task<GetAppointmentSittingDTO> UpdateAppointmentAsync(UpdateAppointmentSittingDTO updateAppointmentDTO)
         {
-            var appointment = await GetSittingAppointmentOrThrowAsync(appointmentDTO.Id);
+            var appointment = await GetSittingAppointmentOrThrowAsync(updateAppointmentDTO.Id);
 
-            appointment.DropoffDate = appointmentDTO.DropoffDate;
-            appointment.DropoffTime = appointmentDTO.DropoffTime;
-            appointment.PickupDate = appointmentDTO.PickupDate;
-            appointment.PickupTime = appointmentDTO.PickupTime;
-            appointment.Note = appointmentDTO.Note ?? string.Empty;
+            var dog = await _unitOfWork.Dogs.GetDogById(appointment.DogId);
+            if (dog == null)
+                throw new Exception(DogExceptionsConstants.DogWithGivenIdNotFound);
 
-            var dropoff = appointment.DropoffDate.ToDateTime(appointment.DropoffTime);
-            var pickup = appointment.PickupDate.ToDateTime(appointment.PickupTime);
+            var (dropoff, pickup) = AppointmentSittingServiceHelpers.ValidateAndGetDateTimes(updateAppointmentDTO.DropoffDate, updateAppointmentDTO.DropoffTime, updateAppointmentDTO.PickupDate, updateAppointmentDTO.PickupTime);
 
-            if (pickup <= dropoff)
-                throw new Exception("Pickup time must be after dropoff time.");
+            var appointmentTimeConflict = _mapper.Map<AppointmentSittingDTO>(appointment);
 
-            var appointmentTimeConflict = new AppointmentTimeRangeDTO
-            {
-                DogId = appointment.DogId,
-                DropoffDate = appointmentDTO.DropoffDate,
-                DropoffTime = appointmentDTO.DropoffTime,
-                PickupDate = appointmentDTO.PickupDate,
-                PickupTime = appointmentDTO.PickupTime,
-                ExcludeAppointmentId = appointmentDTO.Id
-            };
-
-            bool hasConflict = await _unitOfWork.SittingAppointments.HasOverlappingAppointmentAsync(appointmentTimeConflict);
+            bool hasConflict = await _unitOfWork.SittingAppointments.HasOverlappingAppointmentAsync(appointmentTimeConflict, updateAppointmentDTO.Id);
             if (hasConflict)
-                throw new Exception("The selected dog already has another sitting appointment during the requested time.");
+                throw new Exception(AppointmentSittingExceptionsConstants.DogHasOverlappingAppointment);
 
-            var priceDTO = new AppointmentSittingDTO
-            {
-                DogId = appointment.DogId,
-                DropoffDate = appointmentDTO.DropoffDate,
-                DropoffTime = appointmentDTO.DropoffTime,
-                PickupDate = appointmentDTO.PickupDate,
-                PickupTime = appointmentDTO.PickupTime
-            };
+            //_mapper.Map(updateAppointmentDTO, appointment);
+            appointment.DropoffDate = updateAppointmentDTO.DropoffDate;
+            appointment.DropoffTime = updateAppointmentDTO.DropoffTime;
+            appointment.PickupDate = updateAppointmentDTO.PickupDate;
+            appointment.PickupTime = updateAppointmentDTO.PickupTime;
+            appointment.Note = updateAppointmentDTO.Note ?? string.Empty;
 
-            appointment.TotalPrice = await CalculateTotalPriceAsync(priceDTO);
+            appointment.TotalPrice = await CalculateTotalPriceAsync(dog, dropoff, pickup);
             appointment.Status = ConstStatus.Pending;
 
             _unitOfWork.SittingAppointments.Update(appointment);
@@ -195,11 +150,8 @@ namespace BusinessLogicLayer.Services.Implementations
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<double> CalculateTotalPriceAsync(AppointmentSittingDTO appointment)
+        private async Task<double> CalculateTotalPriceAsync(Dog dog, DateTime dropoff, DateTime pickup)
         {
-            var dropoff = appointment.DropoffDate.ToDateTime(appointment.DropoffTime);
-            var pickup = appointment.PickupDate.ToDateTime(appointment.PickupTime);
-
             var totalHours = (pickup - dropoff).TotalHours;
             var fullDays = (int)(totalHours / 24);
             var remainingHours = totalHours % 24;
@@ -221,7 +173,6 @@ namespace BusinessLogicLayer.Services.Implementations
                 basePrice = (fullDays + 1) * dailySitting.Price;
             }
 
-            var dog = await _unitOfWork.Dogs.GetDogById(appointment.DogId);
             return Math.Round(PriceCalculator.CalculatePrice(basePrice, dog.DogSize.Name), 2);
         }
     }

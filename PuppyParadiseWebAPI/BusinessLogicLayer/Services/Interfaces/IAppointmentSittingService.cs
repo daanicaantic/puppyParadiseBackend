@@ -25,7 +25,5 @@ namespace BusinessLogicLayer.Services.Interfaces
         Task<GetAppointmentSittingDTO> UpdateAppointmentAsync(UpdateAppointmentSittingDTO updateSittingAppointmentDTO);
 
         Task DeleteSittingAppointmentAsync(int appointmentId);
-
-        Task<double> CalculateTotalPriceAsync(AppointmentSittingDTO appointment);
     }
 }
