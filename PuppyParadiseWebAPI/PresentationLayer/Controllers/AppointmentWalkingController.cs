@@ -1,4 +1,6 @@
-﻿using BusinessLogicLayer.Helpers;
+﻿using BusinessLogicLayer.Constants.ExceptionsConstants;
+using BusinessLogicLayer.Extensions;
+using BusinessLogicLayer.Helpers;
 using BusinessLogicLayer.Services.Implementations;
 using BusinessLogicLayer.Services.Interfaces;
 using DomainLayer.Constants;
@@ -29,14 +31,9 @@ namespace PresentationLayer.Controllers
         {
             try
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (userId == null)
-                    return Unauthorized();
+                int userId = User.GetRequiredUserId();
 
-                int parsedUserId = int.Parse(userId);
-
-                await _appointmentWalkingService.AddAppointmentWalking(dto, parsedUserId);
-
+                await _appointmentWalkingService.AddAppointmentWalking(dto, userId);
                 return Ok();
             }
             catch (Exception ex)
@@ -50,7 +47,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> UpdateAppointmentWalking(int appointmentId, [FromBody] string newStatus)
         {
             if (!StatusValidator.IsValid(newStatus))
-                return BadRequest("Invalid status value. Allowed values are: Pending, Approved, or Rejected.");
+                return BadRequest(StatusExceptionsConstants.InvalidStatus);
             try
             {
                 await _appointmentWalkingService.UpdateAppointmentWalkingStatus(appointmentId, newStatus);
@@ -67,15 +64,11 @@ namespace PresentationLayer.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateAppointmentWalking([FromBody] UpdateAppointmentWalkingDTO dto)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null)
-                return Unauthorized();
-
-            int parsedUserId = int.Parse(userId);
-
             try
             {
-                await _appointmentWalkingService.UpdateAppointmentWalking(dto, parsedUserId);
+                int userId = User.GetRequiredUserId();
+
+                await _appointmentWalkingService.UpdateAppointmentWalking(dto, userId);
                 return Ok();
             }
             catch (Exception ex)
@@ -120,12 +113,9 @@ namespace PresentationLayer.Controllers
         {
             try
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (userId == null)
-                    return Unauthorized();
+                int userId = User.GetRequiredUserId();
 
-                int parsedUserId = int.Parse(userId);
-                await _appointmentWalkingService.DeleteAppointmentWalking(appointmentId, parsedUserId);
+                await _appointmentWalkingService.DeleteAppointmentWalking(appointmentId, userId);
                 return Ok();
             }
             catch (Exception ex)

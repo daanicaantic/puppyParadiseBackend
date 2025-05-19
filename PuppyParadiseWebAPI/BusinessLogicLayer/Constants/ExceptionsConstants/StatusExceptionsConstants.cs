@@ -8,6 +8,6 @@ namespace BusinessLogicLayer.Constants.ExceptionsConstants
 {
     public static class StatusExceptionsConstants
     {
-        public const string InvalidStatus = "Invalid status.";
+        public const string InvalidStatus = "Invalid status value. Allowed values are: Pending, Approved, or Rejected.";
     }
 }

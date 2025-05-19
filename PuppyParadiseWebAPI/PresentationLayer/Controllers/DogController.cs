@@ -1,4 +1,5 @@
-﻿using BusinessLogicLayer.Services.Implementations;
+﻿using BusinessLogicLayer.Extensions;
+using BusinessLogicLayer.Services.Implementations;
 using BusinessLogicLayer.Services.Interfaces;
 using DomainLayer.DTOs.DogDTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -26,12 +27,9 @@ namespace PresentationLayer.Controllers
         {
             try
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (userId == null)
-                    return Unauthorized();
-                int parsedUserId = int.Parse(userId);
+                int userId = User.GetRequiredUserId();
 
-                await _dogService.AddDog(dogDTO,parsedUserId);
+                await _dogService.AddDog(dogDTO,userId);
                 return Ok();
             }
             catch (Exception ex)
@@ -62,12 +60,9 @@ namespace PresentationLayer.Controllers
         {
             try
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (userId == null)
-                    return Unauthorized();
-                int parsedUserId = int.Parse(userId);
+                int userId = User.GetRequiredUserId();
 
-                var dogs = await _dogService.GetDogsByOwnerId(parsedUserId);
+                var dogs = await _dogService.GetDogsByOwnerId(userId);
                 return Ok(dogs);
             }
             catch (Exception ex)

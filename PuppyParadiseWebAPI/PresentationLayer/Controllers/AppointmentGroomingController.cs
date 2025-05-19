@@ -1,4 +1,6 @@
-﻿using BusinessLogicLayer.Helpers;
+﻿using BusinessLogicLayer.Constants.ExceptionsConstants;
+using BusinessLogicLayer.Extensions;
+using BusinessLogicLayer.Helpers;
 using BusinessLogicLayer.Services.Implementations;
 using BusinessLogicLayer.Services.Interfaces;
 using DomainLayer.Constants;
@@ -29,14 +31,9 @@ namespace PresentationLayer.Controllers
         {
             try
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (userId == null)
-                    return Unauthorized();
+                int userId = User.GetRequiredUserId();
 
-                int parsedUserId = int.Parse(userId);
-
-                await _appointmentGroomingService.AddAppointmentGrooming(dto, parsedUserId);
-
+                await _appointmentGroomingService.AddAppointmentGrooming(dto, userId);
                 return Ok();
             }
             catch (Exception ex)
@@ -51,7 +48,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> UpdateAppointmentStatus(int appointmentId, [FromBody] string newStatus)
         {
             if (!StatusValidator.IsValid(newStatus))
-                return BadRequest("Invalid status value. Allowed values are: Pending, Approved, or Rejected.");
+                return BadRequest(StatusExceptionsConstants.InvalidStatus);
             try
             {
                 await _appointmentGroomingService.UpdateAppointmentGroomingStatus(appointmentId, newStatus);
@@ -68,14 +65,11 @@ namespace PresentationLayer.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateAppointmentGrooming([FromBody] UpdateAppointmentGroomingDTO dto)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                 if (userId == null)
-                     return Unauthorized();
-
-            int parsedUserId = int.Parse(userId);
             try
             {
-                await _appointmentGroomingService.UpdateAppointmentGrooming(dto,parsedUserId);
+                int userId = User.GetRequiredUserId();
+
+                await _appointmentGroomingService.UpdateAppointmentGrooming(dto,userId);
                 return Ok();
             }
             catch (Exception ex)
@@ -135,14 +129,11 @@ namespace PresentationLayer.Controllers
         [Authorize] 
         public async Task<ActionResult> DeleteAppointmentGrooming(int appointmentId)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null)
-                return Unauthorized();
-
-            int parsedUserId = int.Parse(userId);
             try
             {
-                await _appointmentGroomingService.DeleteAppointmentGrooming(appointmentId,parsedUserId);
+                int userId = User.GetRequiredUserId();
+
+                await _appointmentGroomingService.DeleteAppointmentGrooming(appointmentId,userId);
                 return Ok();
             }
             catch (Exception ex)
