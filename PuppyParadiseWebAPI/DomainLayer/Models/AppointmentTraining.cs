@@ -26,7 +26,7 @@ namespace DomainLayer.Models
 
         public string Status { get; set; }
 
-        public string Note { get; set; }
+        public string? Note { get; set; }
 
     }
 }

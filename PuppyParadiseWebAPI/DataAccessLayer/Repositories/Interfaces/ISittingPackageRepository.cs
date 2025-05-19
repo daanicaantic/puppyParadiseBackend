@@ -10,5 +10,6 @@ namespace DataAccessLayer.Repositories.Interfaces
 {
     public interface ISittingPackageRepository : IRepository<SittingPackage>
     {
+        Task<SittingPackage> GetSittingPackageByName(string name);
     }
 }

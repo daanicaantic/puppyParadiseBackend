@@ -21,7 +21,7 @@ namespace DataAccessLayer.Configurations
                    .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(ag => ag.Dog)
-                   .WithMany()
+                   .WithMany(x => x.AppointmentSittings)
                    .HasForeignKey(ag => ag.DogId)
                    .OnDelete(DeleteBehavior.NoAction);
         }

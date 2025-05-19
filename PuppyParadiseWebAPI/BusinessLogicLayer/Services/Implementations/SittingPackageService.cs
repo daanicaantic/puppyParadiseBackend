@@ -27,6 +27,14 @@ namespace BusinessLogicLayer.Services.Implementations
             return sittingPackage;
         }
 
+        public async Task<SittingPackage> GetSittingPackageByName(string name)
+        {
+            var sittingPackage = await _unitOfWork.SittingPackages.GetSittingPackageByName(name);
+            if (sittingPackage == null)
+                throw new Exception(SittingPackageExceptionsConstants.SittingPackageWithGivenIdNotFound);
+            return sittingPackage;
+        }
+
         public async Task AddSittingPackage(SittingPackage sittingPackage)
         {
             await _unitOfWork.SittingPackages.Add(sittingPackage);
