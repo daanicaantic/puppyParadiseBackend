@@ -10,5 +10,6 @@ namespace DataAccessLayer.Repositories.Interfaces
 {
     public interface ITrainingPackageRepository : IRepository<TrainingPackage>
     {
+        Task<double> GetPriceForTrainingPackage(int trainingPackageId);
     }
 }
