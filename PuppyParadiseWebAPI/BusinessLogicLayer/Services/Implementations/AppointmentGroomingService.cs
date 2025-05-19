@@ -46,7 +46,10 @@ namespace BusinessLogicLayer.Services.Implementations
             if (package == null)
                 throw new Exception(GroomingPackageExceptionsConstants.GroomingPackageWithGivenIdNotFound);
 
-            double packagePrice = PriceCalculator.CalculatePrice(package.Price,dog.DogSize.Name);
+            if (!AppointmentDateTimeValidator.IsValidAppointmentDate(dto.AppointmentDate, dto.AppointmentTime))
+                throw new Exception(AppointmentErrors.CannotScheduleInPast);
+
+                double packagePrice = PriceCalculator.CalculatePrice(package.Price,dog.DogSize.Name);
 
             var (extraServicesPrice, extraServices) = await _groomingServiceService.CalculateExtraServices(dto.ExtraServiceIds);
 
@@ -139,6 +142,9 @@ namespace BusinessLogicLayer.Services.Implementations
             var package = await _unitOfWork.GroomingPackages.GetById(dto.GroomingPackageId);
             if (package == null)
                 throw new Exception(GroomingPackageExceptionsConstants.GroomingPackageWithGivenIdNotFound);
+
+            if (!AppointmentDateTimeValidator.IsValidAppointmentDate(dto.AppointmentDate, dto.AppointmentTime))
+                throw new Exception(AppointmentErrors.CannotScheduleInPast);
 
             double packagePrice = PriceCalculator.CalculatePrice(package.Price, dog.DogSize.Name);
 

@@ -42,6 +42,9 @@ namespace BusinessLogicLayer.Services.Implementations
             if (package == null)
                 throw new Exception(WalkingPackageExceptionsConstants.WalkingPackageWithGivenIdNotFound);
 
+            if (!AppointmentDateTimeValidator.IsValidAppointmentDate(dto.PickupDate, dto.PickupTime))
+                throw new Exception(AppointmentErrors.CannotScheduleInPast);
+
             double totalPrice = PriceCalculator.CalculatePrice(package.Price, dog.DogSize.Name);
 
             var appointment = new AppointmentWalking
@@ -91,6 +94,9 @@ namespace BusinessLogicLayer.Services.Implementations
             var package = await _unitOfWork.WalkingPackages.GetById(dto.WalkingPackageId);
             if (package == null)
                 throw new Exception(WalkingPackageExceptionsConstants.WalkingPackageWithGivenIdNotFound);
+
+            if (!AppointmentDateTimeValidator.IsValidAppointmentDate(dto.PickupDate, dto.PickupTime))
+                throw new Exception(AppointmentErrors.CannotScheduleInPast);
 
             double totalPrice = PriceCalculator.CalculatePrice(package.Price, dog.DogSize.Name);
 
