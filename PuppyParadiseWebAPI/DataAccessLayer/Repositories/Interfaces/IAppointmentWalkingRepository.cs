@@ -9,5 +9,7 @@ namespace DataAccessLayer.Repositories.Interfaces
 {
     public interface IAppointmentWalkingRepository : IRepository<AppointmentWalking>
     {
+        Task<AppointmentWalking> GetAppointmentWalkingById(int id);
+        Task<List<AppointmentWalking>> GetAllAppointmentWalkings();
     }
 }

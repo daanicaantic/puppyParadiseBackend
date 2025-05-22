@@ -39,11 +39,17 @@ namespace BusinessLogicLayer.Services.Implementations
             if (dog.DogSize == null)
                 throw new Exception(DogExceptionsConstants.UnknownDogSize);
 
+            if (dog.OwnerId != userId)
+                throw new Exception(DogExceptionsConstants.DogOwnershipMismatch);
+
             var package = await _unitOfWork.GroomingPackages.GetById(dto.GroomingPackageId);
             if (package == null)
                 throw new Exception(GroomingPackageExceptionsConstants.GroomingPackageWithGivenIdNotFound);
 
-            double packagePrice = PriceCalculator.CalculatePrice(package.Price,dog.DogSize.Name);
+            if (!AppointmentDateTimeValidator.IsValidAppointmentDate(dto.AppointmentDate, dto.AppointmentTime))
+                throw new Exception(AppointmentErrors.CannotScheduleInPast);
+
+                double packagePrice = PriceCalculator.CalculatePrice(package.Price,dog.DogSize.Name);
 
             var (extraServicesPrice, extraServices) = await _groomingServiceService.CalculateExtraServices(dto.ExtraServiceIds);
 
@@ -105,11 +111,13 @@ namespace BusinessLogicLayer.Services.Implementations
             return _mapper.Map<List<GetAppointmentGroomingDTO>>(appointments);
         }
 
-        public async Task DeleteAppointmentGrooming(int appointmentId)
+        public async Task DeleteAppointmentGrooming(int appointmentId,int userId)
         {
             var appointmentGrooming = await _unitOfWork.GroomingAppointments.GetAppointmentGroomingById(appointmentId);
             if (appointmentGrooming == null)
-                throw new Exception(DogExceptionsConstants.DogWithGivenIdNotFound);
+                throw new Exception(AppointmentGroomingExceptionsConstants.AppointmentGroomingWithGivenIdNotFound);
+            if (appointmentGrooming.UserId != userId)
+                throw new Exception(AppointmentGroomingExceptionsConstants.UnauthorizedToDeleteAppointment);
 
             _unitOfWork.GroomingAppointments.Delete(appointmentGrooming);
             await _unitOfWork.SaveChangesAsync();
@@ -128,9 +136,15 @@ namespace BusinessLogicLayer.Services.Implementations
             if (dog.DogSize == null)
                 throw new Exception(DogExceptionsConstants.UnknownDogSize);
 
+            if (dog.OwnerId != userId)
+                throw new Exception(DogExceptionsConstants.DogOwnershipMismatch);
+
             var package = await _unitOfWork.GroomingPackages.GetById(dto.GroomingPackageId);
             if (package == null)
                 throw new Exception(GroomingPackageExceptionsConstants.GroomingPackageWithGivenIdNotFound);
+
+            if (!AppointmentDateTimeValidator.IsValidAppointmentDate(dto.AppointmentDate, dto.AppointmentTime))
+                throw new Exception(AppointmentErrors.CannotScheduleInPast);
 
             double packagePrice = PriceCalculator.CalculatePrice(package.Price, dog.DogSize.Name);
 

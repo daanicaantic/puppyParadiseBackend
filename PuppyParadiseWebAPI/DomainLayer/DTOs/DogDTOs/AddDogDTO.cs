@@ -11,6 +11,5 @@ namespace DomainLayer.DTOs.DogDTOs
         public string Name { get; set; }
         public string Breed { get; set; }
         public double Weight { get; set; }
-        public int OwnerId { get; set; }
     }
 }

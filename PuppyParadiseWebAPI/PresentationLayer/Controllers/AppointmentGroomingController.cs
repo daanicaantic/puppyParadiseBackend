@@ -1,4 +1,6 @@
-﻿using BusinessLogicLayer.Helpers;
+﻿using BusinessLogicLayer.Constants.ExceptionsConstants;
+using BusinessLogicLayer.Extensions;
+using BusinessLogicLayer.Helpers;
 using BusinessLogicLayer.Services.Implementations;
 using BusinessLogicLayer.Services.Interfaces;
 using DomainLayer.Constants;
@@ -24,21 +26,14 @@ namespace PresentationLayer.Controllers
 
         [Route("AddAppointmentGrooming")]
         [HttpPost]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> AddAppointmentGrooming([FromBody] AddAppointmentGroomingDTO dto)
         {
             try
             {
-                /*var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (userId == null)
-                    return Unauthorized();
-
-                int parsedUserId = int.Parse(userId);*/
-
-                var userId = 1;
+                int userId = User.GetRequiredUserId();
 
                 await _appointmentGroomingService.AddAppointmentGrooming(dto, userId);
-
                 return Ok();
             }
             catch (Exception ex)
@@ -49,11 +44,11 @@ namespace PresentationLayer.Controllers
 
         [Route("UpdateAppointmentGrooming/status/{appointmentId}")]
         [HttpPut]
-        //[Authorize(Roles = "Admin")]  
+        [Authorize(Roles = ConstRoles.Admin)]  
         public async Task<IActionResult> UpdateAppointmentStatus(int appointmentId, [FromBody] string newStatus)
         {
             if (!StatusValidator.IsValid(newStatus))
-                return BadRequest("Invalid status value. Allowed values are: Pending, Approved, or Rejected.");
+                return BadRequest(StatusExceptionsConstants.InvalidStatus);
             try
             {
                 await _appointmentGroomingService.UpdateAppointmentGroomingStatus(appointmentId, newStatus);
@@ -66,17 +61,14 @@ namespace PresentationLayer.Controllers
         }
 
         [Route("UpdateAppointmentGrooming")]
-        [HttpPut] 
-        public async Task<IActionResult> UpdateAppointmentStatus([FromBody] UpdateAppointmentGroomingDTO dto)
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> UpdateAppointmentGrooming([FromBody] UpdateAppointmentGroomingDTO dto)
         {
-            /*var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                 if (userId == null)
-                     return Unauthorized();
-
-                 int parsedUserId = int.Parse(userId);*/
-            int userId = 1;
             try
             {
+                int userId = User.GetRequiredUserId();
+
                 await _appointmentGroomingService.UpdateAppointmentGrooming(dto,userId);
                 return Ok();
             }
@@ -134,12 +126,14 @@ namespace PresentationLayer.Controllers
        
         [Route("DeleteAppointmentGrooming/{appointmentId}")]
         [HttpDelete]
-        //[Authorize(Roles = ConstRoles.Admin)] 
+        [Authorize] 
         public async Task<ActionResult> DeleteAppointmentGrooming(int appointmentId)
         {
             try
             {
-                await _appointmentGroomingService.DeleteAppointmentGrooming(appointmentId);
+                int userId = User.GetRequiredUserId();
+
+                await _appointmentGroomingService.DeleteAppointmentGrooming(appointmentId,userId);
                 return Ok();
             }
             catch (Exception ex)
@@ -147,7 +141,5 @@ namespace PresentationLayer.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-
     }
 }
