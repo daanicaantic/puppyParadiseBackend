@@ -3,8 +3,12 @@ using BusinessLogicLayer.Services.Implementations;
 using BusinessLogicLayer.Services.Interfaces;
 using DomainLayer.DTOs.AppointmentSittingDTOs;
 using DomainLayer.DTOs.AppointmentTrainingDTOs;
+using DomainLayer.DTOs.CommonDTOs;
+using DomainLayer.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PresentationLayer.Extensions;
 
 namespace PresentationLayer.Controllers
 {
@@ -141,6 +145,31 @@ namespace PresentationLayer.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [Authorize]
+        [Route("GetTrainingAppointments")]
+        [HttpGet]
+        public async Task<ActionResult<PagedResult<GetAppointmentTrainingDTO>>> GetTrainingAppointments([FromQuery] AppointmentQueryParameters query)
+        {
+            try
+            {
+                var currentUserId = User.GetUserId(); // Custom extension or claim
+                var isAdmin = User.IsAdmin(); // Role check
+
+                foreach (var claim in User.Claims)
+                {
+                    Console.WriteLine($"Claim Type: {claim.Type} | Value: {claim.Value}");
+                }
+
+                var result = await _appointmentTrainingService.GetTrainingAppointmentsAsync(query, currentUserId, isAdmin);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
     }
 }

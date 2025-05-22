@@ -6,6 +6,7 @@ using DomainLayer.DTOs.DogDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PresentationLayer.Extensions;
 using System.Security.Claims;
 
 namespace PresentationLayer.Controllers

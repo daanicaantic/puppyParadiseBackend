@@ -16,8 +16,11 @@ namespace DataAccessLayer.Repositories.Implementations
 {
     public class AppointmentTrainingRepository : Repository<AppointmentTraining>, IAppointmentTrainingRepository
     {
-        public AppointmentTrainingRepository(PuppyParadiseContext puppyParadiseContext) : base(puppyParadiseContext)
+        private readonly IMapper _mapper;
+
+        public AppointmentTrainingRepository(PuppyParadiseContext puppyParadiseContext, IMapper mapper) : base(puppyParadiseContext)
         {
+            _mapper = mapper;
         }
 
         public async Task<AppointmentTraining> GetTrainingAppointmentByIdAsync(int appointmentId)
@@ -59,6 +62,40 @@ namespace DataAccessLayer.Repositories.Implementations
                     // existing start < new end && new start < existing end
                     a.StartDate <= endDate && startDate <= a.EndDate);
             return hasOverlap;
+        }
+
+        public async Task<PagedResult<GetAppointmentTrainingDTO>> GetTrainingAppointmentsAsync(AppointmentQueryParameters query, int currentUserId, bool isAdmin)
+        {
+            // If not Admin, override UserId to current user's ID
+            if (!isAdmin)
+                query.UserId = currentUserId;
+
+            var queryable = _puppyParadiseContext.AppointmentTrainings
+                .Include(x => x.Dog)
+                .Include(x => x.User)
+                .AsQueryable();
+
+            if (query.UserId.HasValue)
+                queryable = queryable.Where(x => x.UserId == query.UserId);
+
+            if (query.DogId.HasValue)
+                queryable = queryable.Where(x => x.DogId == query.DogId);
+
+            var totalCount = await queryable.CountAsync();
+            var results = await queryable
+                .Skip((query.Page - 1) * query.PageSize)
+                .Take(query.PageSize)
+                .ToListAsync();
+
+            var mapped = _mapper.Map<List<GetAppointmentTrainingDTO>>(results);
+
+            return new PagedResult<GetAppointmentTrainingDTO>
+            {
+                Items = mapped,
+                TotalCount = totalCount,
+                Page = query.Page,
+                PageSize = query.PageSize
+            };
         }
     }
 }

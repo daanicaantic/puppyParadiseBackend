@@ -13,6 +13,7 @@ using DomainLayer.Helpers;
 using DomainLayer.Constants;
 using DomainLayer.DTOs.AppointmentTrainingDTOs;
 using DomainLayer.Models;
+using DomainLayer.DTOs.AppointmentSittingDTOs;
 
 namespace BusinessLogicLayer.Services.Implementations
 {
@@ -160,6 +161,12 @@ namespace BusinessLogicLayer.Services.Implementations
 
             _unitOfWork.TrainingAppointments.Delete(appointment);
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<PagedResult<GetAppointmentTrainingDTO>> GetTrainingAppointmentsAsync(AppointmentQueryParameters query, int currentUserId, bool isAdmin)
+        {
+            var pagedResult = await _unitOfWork.TrainingAppointments.GetTrainingAppointmentsAsync(query, currentUserId, isAdmin);
+            return pagedResult;
         }
     }
 }
