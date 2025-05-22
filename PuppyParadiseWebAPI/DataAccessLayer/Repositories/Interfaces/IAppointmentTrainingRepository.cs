@@ -19,5 +19,7 @@ namespace DataAccessLayer.Repositories.Interfaces
         Task<List<AppointmentTraining>> GetByDogIdAsync(int dogId);
 
         Task<bool> HasOverlappingAppointmentAsync(int dogId, DateOnly startDate, DateOnly endDate, int? excludeAppointmentId);
+
+        Task<PagedResult<GetAppointmentTrainingDTO>> GetTrainingAppointmentsAsync(AppointmentQueryParameters query, int currentUserId, bool isAdmin);
     }
 }

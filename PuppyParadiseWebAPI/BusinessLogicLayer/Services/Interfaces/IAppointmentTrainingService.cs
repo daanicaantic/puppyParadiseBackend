@@ -29,5 +29,7 @@ namespace BusinessLogicLayer.Services.Interfaces
         Task<GetAppointmentTrainingDTO> UpdateAppointmentAsync(UpdateAppointmentTrainingDTO updateAppointmentDTO);
 
         Task DeleteTrainingAppointmentAsync(int appointmentId);
+
+        Task<PagedResult<GetAppointmentTrainingDTO>> GetTrainingAppointmentsAsync(AppointmentQueryParameters query, int currentUserId, bool isAdmin);
     }
 }
