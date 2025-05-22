@@ -10,7 +10,9 @@ using BusinessLogicLayer.Services.Interfaces;
 using DataAccessLayer.UnitOfWork;
 using DomainLayer.Constants;
 using DomainLayer.DTOs.AppointmentSittingDTOs;
+using DomainLayer.DTOs.CommonDTOs;
 using DomainLayer.DTOs.UserDTOs;
+using DomainLayer.Helpers;
 using DomainLayer.Models;
 using DomainLayer.Profiles.AppointmentSittingProfiles;
 
@@ -182,6 +184,12 @@ namespace BusinessLogicLayer.Services.Implementations
             }
 
             return Math.Round(PriceCalculator.CalculatePrice(basePrice, dog.DogSize.Name), 2);
+        }
+
+        public async Task<PagedResult<GetAppointmentSittingDTO>> GetSittingAppointmentsAsync(AppointmentQueryParameters query, int currentUserId, bool isAdmin)
+        {
+            var pagedResult = await _unitOfWork.SittingAppointments.GetSittingAppointmentsAsync(query, currentUserId, isAdmin);
+            return pagedResult;
         }
     }
 }

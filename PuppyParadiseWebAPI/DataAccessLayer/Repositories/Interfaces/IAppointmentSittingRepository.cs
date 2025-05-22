@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DomainLayer.DTOs.AppointmentSittingDTOs;
+using DomainLayer.DTOs.CommonDTOs;
+using DomainLayer.Helpers;
 using DomainLayer.Models;
 
 namespace DataAccessLayer.Repositories.Interfaces
@@ -17,5 +19,7 @@ namespace DataAccessLayer.Repositories.Interfaces
         Task<List<AppointmentSitting>> GetByDogIdAsync(int dogId);
 
         Task<bool> HasOverlappingAppointmentAsync(AppointmentSittingDTO appointment, int? excludeAppointmentId);
+
+        Task<PagedResult<GetAppointmentSittingDTO>> GetSittingAppointmentsAsync(AppointmentQueryParameters query, int currentUserId, bool isAdmin);
     }
 }

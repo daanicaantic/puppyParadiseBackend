@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +8,9 @@ using BusinessLogicLayer.Constants.ExceptionsConstants;
 using BusinessLogicLayer.Helpers;
 using BusinessLogicLayer.Services.Interfaces;
 using DataAccessLayer.UnitOfWork;
+using DomainLayer.DTOs.CommonDTOs;
+using DomainLayer.Helpers;
 using DomainLayer.Constants;
-using DomainLayer.DTOs.AppointmentSittingDTOs;
 using DomainLayer.DTOs.AppointmentTrainingDTOs;
 using DomainLayer.Models;
 
