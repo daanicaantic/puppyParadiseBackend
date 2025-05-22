@@ -20,6 +20,8 @@ namespace DomainLayer.Profiles.AppointmentSittingProfiles
                 .ForMember(dest => dest.TotalPrice, opt => opt.Ignore())
                 .ForMember(dest => dest.Status, opt => opt.Ignore())
                 .ForMember(dest => dest.Note, opt => opt.MapFrom(src => src.Note ?? string.Empty));
+
+            CreateMap<UpdateAppointmentSittingDTO, AppointmentSittingDTO>();
         }
     }
 }

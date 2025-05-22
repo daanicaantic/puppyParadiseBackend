@@ -36,9 +36,20 @@ namespace DataAccessLayer.Repositories.Implementations
             return sittingAppointmentUser;
         }
 
+        public async Task<List<AppointmentSitting>> GetByDogIdAsync(int dogId)
+        {
+            var sittingAppointmentDog = await _puppyParadiseContext.AppointmentSittings
+                .Where(a => a.DogId == dogId)
+                .Include(a => a.Dog)
+                .Include(a => a.User)
+                .ToListAsync();
+
+            return sittingAppointmentDog;
+        }
+
         public async Task<bool> HasOverlappingAppointmentAsync(AppointmentSittingDTO appointment, int? excludeAppointmentId)
         {
-            var appointments =  await _puppyParadiseContext.AppointmentSittings
+            var hasOverlap =  await _puppyParadiseContext.AppointmentSittings
                 .Where(a =>
                     a.DogId == appointment.DogId && (excludeAppointmentId == null || a.Id != excludeAppointmentId))
                 .AnyAsync(a =>
@@ -50,7 +61,7 @@ namespace DataAccessLayer.Repositories.Implementations
                     (appointment.DropoffDate < a.PickupDate
                     || (appointment.DropoffDate == a.PickupDate && appointment.DropoffTime < a.PickupTime))
                 );
-            return appointments;
+            return hasOverlap;
         }
     }
 }
