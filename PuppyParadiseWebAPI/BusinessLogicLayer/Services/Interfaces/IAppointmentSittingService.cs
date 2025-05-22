@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DomainLayer.DTOs.AppointmentSittingDTOs;
+using DomainLayer.DTOs.CommonDTOs;
+using DomainLayer.Helpers;
 using DomainLayer.Models;
 
 namespace BusinessLogicLayer.Services.Interfaces
@@ -25,5 +27,7 @@ namespace BusinessLogicLayer.Services.Interfaces
         Task<GetAppointmentSittingDTO> UpdateAppointmentAsync(UpdateAppointmentSittingDTO updateSittingAppointmentDTO);
 
         Task DeleteSittingAppointmentAsync(int appointmentId);
+
+        Task<PagedResult<GetAppointmentSittingDTO>> GetSittingAppointmentsAsync(AppointmentQueryParameters query, int currentUserId, bool isAdmin);
     }
 }

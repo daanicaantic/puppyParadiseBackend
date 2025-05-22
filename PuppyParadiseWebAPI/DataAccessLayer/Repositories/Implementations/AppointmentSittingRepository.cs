@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using DataAccessLayer.Context;
 using DataAccessLayer.Repositories.Interfaces;
 using DomainLayer.DTOs.AppointmentSittingDTOs;
+using DomainLayer.DTOs.CommonDTOs;
+using DomainLayer.Helpers;
 using DomainLayer.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,8 +16,11 @@ namespace DataAccessLayer.Repositories.Implementations
 {
     public class AppointmentSittingRepository : Repository<AppointmentSitting>, IAppointmentSittingRepository
     {
-        public AppointmentSittingRepository(PuppyParadiseContext puppyParadiseContext) : base(puppyParadiseContext)
+        private readonly IMapper _mapper;
+
+        public AppointmentSittingRepository(PuppyParadiseContext puppyParadiseContext, IMapper mapper) : base(puppyParadiseContext)
         {
+            _mapper = mapper;
         }
 
         public async Task<AppointmentSitting> GetSittingAppointmentByIdAsync(int appointmentId)
@@ -51,6 +57,40 @@ namespace DataAccessLayer.Repositories.Implementations
                     || (appointment.DropoffDate == a.PickupDate && appointment.DropoffTime < a.PickupTime))
                 );
             return appointments;
+        }
+
+        public async Task<PagedResult<GetAppointmentSittingDTO>> GetSittingAppointmentsAsync(AppointmentQueryParameters query, int currentUserId, bool isAdmin)
+        {
+            // If not Admin, override UserId to current user's ID
+            if (!isAdmin)
+                query.UserId = currentUserId;
+
+            var queryable = _puppyParadiseContext.AppointmentSittings
+                .Include(x => x.Dog)
+                .Include(x => x.User)
+                .AsQueryable();
+
+            if (query.UserId.HasValue)
+                queryable = queryable.Where(x => x.UserId == query.UserId);
+
+            if (query.DogId.HasValue)
+                queryable = queryable.Where(x => x.DogId == query.DogId);
+
+            var totalCount = await queryable.CountAsync();
+            var results = await queryable
+                .Skip((query.Page - 1) * query.PageSize)
+                .Take(query.PageSize)
+                .ToListAsync();
+
+            var mapped = _mapper.Map<List<GetAppointmentSittingDTO>>(results);
+
+            return new PagedResult<GetAppointmentSittingDTO>
+            {
+                Items = mapped,
+                TotalCount = totalCount,
+                Page = query.Page,
+                PageSize = query.PageSize
+            };
         }
     }
 }

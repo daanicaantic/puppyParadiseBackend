@@ -5,6 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using BusinessLogicLayer.Services.Interfaces;
 using DataAccessLayer.UnitOfWork;
+using DomainLayer.DTOs.AppointmentSittingDTOs;
+using DomainLayer.DTOs.CommonDTOs;
+using DomainLayer.Helpers;
+using DomainLayer.Models;
 
 namespace BusinessLogicLayer.Services.Implementations
 {
