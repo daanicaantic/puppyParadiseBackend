@@ -48,7 +48,7 @@ namespace BusinessLogicLayer.Services.Implementations
 
             bool hasConflict = await _unitOfWork.TrainingAppointments.HasOverlappingAppointmentAsync(dog.Id, appointment.StartDate, trainingAppointment.EndDate, null);
             if(hasConflict)
-                throw new Exception(AppointmentTrainingExceptionsConstants.DogHasOverlappingAppointment);
+                throw new Exception(AppointmentErrors.DogHasOverlappingAppointment);
 
             trainingAppointment.TotalPrice = await _unitOfWork.TrainingPackages.GetPriceForTrainingPackage(trainingAppointment.TrainingPackageId);
             trainingAppointment.Status = ConstStatus.Pending;
@@ -141,7 +141,7 @@ namespace BusinessLogicLayer.Services.Implementations
 
             bool hasConflict = await _unitOfWork.TrainingAppointments.HasOverlappingAppointmentAsync(dog.Id, updateAppointmentDTO.StartDate, appointment.EndDate, updateAppointmentDTO.Id);
             if(hasConflict)
-                throw new Exception(AppointmentTrainingExceptionsConstants.DogHasOverlappingAppointment);
+                throw new Exception(AppointmentErrors.DogHasOverlappingAppointment);
 
             appointment.TotalPrice = await _unitOfWork.TrainingPackages.GetPriceForTrainingPackage(appointment.TrainingPackageId);
             appointment.Status = ConstStatus.Pending;

@@ -27,7 +27,7 @@ namespace PresentationLayer.Controllers
             {
                 var today = DateOnly.FromDateTime(DateTime.Now);
                 if (appointmentTrainingDTO.StartDate < today)
-                    throw new Exception(AppointmentTrainingExceptionsConstants.AppointmentIsInThePast);
+                    throw new Exception(AppointmentErrors.CannotScheduleInPast);
 
                 var ta = await _appointmentTrainingService.CreateTrainingAppointmentAsync(appointmentTrainingDTO);
                 return Ok(ta);

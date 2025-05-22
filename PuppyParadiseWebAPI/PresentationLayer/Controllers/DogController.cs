@@ -1,6 +1,7 @@
 ﻿using BusinessLogicLayer.Extensions;
 using BusinessLogicLayer.Services.Implementations;
 using BusinessLogicLayer.Services.Interfaces;
+using DomainLayer.Constants;
 using DomainLayer.DTOs.DogDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -20,9 +21,9 @@ namespace PresentationLayer.Controllers
             _dogService = dogService;
         }
 
+        [Authorize(Roles = ConstRoles.Owner)]
         [Route("AddDog")]
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> AddDog([FromBody] AddDogDTO dogDTO)
         {
             try
@@ -49,7 +50,7 @@ namespace PresentationLayer.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound(new { message = ex.Message });
+                return BadRequest(ex.Message);
             }
         }
 

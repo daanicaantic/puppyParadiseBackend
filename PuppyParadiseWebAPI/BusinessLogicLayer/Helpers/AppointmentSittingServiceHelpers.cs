@@ -19,7 +19,7 @@ namespace BusinessLogicLayer.Helpers
                 throw new Exception(AppointmentSittingExceptionsConstants.PickupTimeMustBeAfterDropoffTime);
 
             if (dropoff < now || pickup < now)
-                throw new Exception(AppointmentSittingExceptionsConstants.AppointmentIsInThePast);
+                throw new Exception(AppointmentErrors.CannotScheduleInPast);
 
             return (dropoff, pickup);
         }

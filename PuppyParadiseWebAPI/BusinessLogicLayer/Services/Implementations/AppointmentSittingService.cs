@@ -45,7 +45,7 @@ namespace BusinessLogicLayer.Services.Implementations
 
             bool hasConflict = await _unitOfWork.SittingAppointments.HasOverlappingAppointmentAsync(appointmentTimeConflict, null);
             if (hasConflict)
-                throw new Exception(AppointmentSittingExceptionsConstants.DogHasOverlappingAppointment);
+                throw new Exception(AppointmentErrors.DogHasOverlappingAppointment);
 
             var totalPrice = await CalculateTotalPriceAsync(dog, dropoff, pickup);
 
@@ -133,7 +133,7 @@ namespace BusinessLogicLayer.Services.Implementations
 
             bool hasConflict = await _unitOfWork.SittingAppointments.HasOverlappingAppointmentAsync(appointmentTimeConflict, updateAppointmentDTO.Id);
             if (hasConflict)
-                throw new Exception(AppointmentSittingExceptionsConstants.DogHasOverlappingAppointment);
+                throw new Exception(AppointmentErrors.DogHasOverlappingAppointment);
 
             //_mapper.Map(updateAppointmentDTO, appointment);
             appointment.DropoffDate = updateAppointmentDTO.DropoffDate;
