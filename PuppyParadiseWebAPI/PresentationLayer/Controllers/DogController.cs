@@ -1,8 +1,11 @@
-﻿using BusinessLogicLayer.Services.Implementations;
+﻿using BusinessLogicLayer.Extensions;
+using BusinessLogicLayer.Services.Implementations;
 using BusinessLogicLayer.Services.Interfaces;
 using DomainLayer.DTOs.DogDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace PresentationLayer.Controllers
 {
@@ -19,11 +22,14 @@ namespace PresentationLayer.Controllers
 
         [Route("AddDog")]
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddDog([FromBody] AddDogDTO dogDTO)
         {
             try
             {
-                await _dogService.AddDog(dogDTO);
+                int userId = User.GetRequiredUserId();
+
+                await _dogService.AddDog(dogDTO,userId);
                 return Ok();
             }
             catch (Exception ex)
@@ -47,13 +53,16 @@ namespace PresentationLayer.Controllers
             }
         }
 
-        [Route("GetDogsByOwnerId/{ownerId}")]
+        [Route("GetDogsByOwnerId")]
         [HttpGet]
-        public async Task<IActionResult> GetDogsByOwnerId(int ownerId)
+        [Authorize]
+        public async Task<IActionResult> GetDogsByOwnerId()
         {
             try
             {
-                var dogs = await _dogService.GetDogsByOwnerId(ownerId);
+                int userId = User.GetRequiredUserId();
+
+                var dogs = await _dogService.GetDogsByOwnerId(userId);
                 return Ok(dogs);
             }
             catch (Exception ex)

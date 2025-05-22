@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BusinessLogicLayer.Constants.ExceptionsConstants
 {
-    public static class StatusExceptionsConstants
+    public static class AppointmentErrors
     {
-        public const string InvalidStatus = "Invalid status value. Allowed values are: Pending, Approved, or Rejected.";
+        public const string CannotScheduleInPast = "You cannot schedule an appointment in the past.";
     }
 }

@@ -68,6 +68,21 @@ namespace PresentationLayer.Controllers
             }
         }
 
+        [Route("GetSittingAppointmentByDogId/{id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetSittingAppointmentByDogId(int id)
+        {
+            try
+            {
+                var saDog = await _appointmentSittingService.GetByDogIdAsync(id);
+                return Ok(saDog);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [Route("ApproveAppointment/{id}")]
         [HttpPut]
         public async Task<IActionResult> ApproveAppointment(int id)
@@ -98,9 +113,9 @@ namespace PresentationLayer.Controllers
             }
         }
 
-        [Route("UpdateAppointment")]
+        [Route("UpdateSittingAppointment")]
         [HttpPut]
-        public async Task<IActionResult> UpdateAppointment([FromBody] UpdateAppointmentSittingDTO updateAppointmentSittingDTO)
+        public async Task<IActionResult> UpdateSittingAppointment([FromBody] UpdateAppointmentSittingDTO updateAppointmentSittingDTO)
         {
             try
             {

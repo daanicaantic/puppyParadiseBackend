@@ -22,11 +22,14 @@ namespace DomainLayer.Models
 
         public TrainingPackage TrainingPackage { get; set; }
 
+        public DateOnly StartDate { get; set; }
+
+        public DateOnly EndDate { get; set; }
+
         public double TotalPrice { get; set; }
 
         public string Status { get; set; }
 
         public string? Note { get; set; }
-
     }
 }

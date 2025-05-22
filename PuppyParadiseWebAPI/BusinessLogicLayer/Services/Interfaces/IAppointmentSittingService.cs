@@ -20,6 +20,8 @@ namespace BusinessLogicLayer.Services.Interfaces
 
         Task<IEnumerable<GetAppointmentSittingDTO>> GetByUserIdAsync(int userId);
 
+        Task<List<GetAppointmentSittingDTO>> GetByDogIdAsync(int dogId);
+
         Task ApproveAppointmentAsync(int appointmentId);
 
         Task RejectAppointmentAsync(int appointmentId);

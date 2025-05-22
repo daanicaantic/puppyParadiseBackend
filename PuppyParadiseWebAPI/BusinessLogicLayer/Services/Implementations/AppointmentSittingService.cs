@@ -85,6 +85,14 @@ namespace BusinessLogicLayer.Services.Implementations
             return sittingAppointmentUser;
         }
 
+        public async Task<List<GetAppointmentSittingDTO>> GetByDogIdAsync(int dogId)
+        {
+            var saDog = await _unitOfWork.SittingAppointments.GetByDogIdAsync(dogId);
+
+            var sittingAppointmentDog = _mapper.Map<List<GetAppointmentSittingDTO>>(saDog);
+            return sittingAppointmentDog;
+        }
+
         public async Task ApproveAppointmentAsync(int appointmentId)
         {
             var appointment = await GetSittingAppointmentOrThrowAsync(appointmentId);
@@ -121,7 +129,7 @@ namespace BusinessLogicLayer.Services.Implementations
 
             var (dropoff, pickup) = AppointmentSittingServiceHelpers.ValidateAndGetDateTimes(updateAppointmentDTO.DropoffDate, updateAppointmentDTO.DropoffTime, updateAppointmentDTO.PickupDate, updateAppointmentDTO.PickupTime);
 
-            var appointmentTimeConflict = _mapper.Map<AppointmentSittingDTO>(appointment);
+            var appointmentTimeConflict = _mapper.Map<AppointmentSittingDTO>(updateAppointmentDTO);
 
             bool hasConflict = await _unitOfWork.SittingAppointments.HasOverlappingAppointmentAsync(appointmentTimeConflict, updateAppointmentDTO.Id);
             if (hasConflict)
